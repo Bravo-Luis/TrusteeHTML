@@ -1,8 +1,8 @@
 """
-ClassificationTrustee
-=====================
+ClassificationTrustee with GUI
+=========================================
 Simple example on how to use the ClassificationTrustee class to extract
-a decision tree from a RandomForestClassifier from scikit-learn.
+a decision tree from a RandomForestClassifier from scikit-learn. Includes GUI
 """
 # importing required libraries
 # importing Scikit-learn library and datasets package
