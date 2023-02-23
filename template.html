@@ -16,11 +16,11 @@
 
     <table>
         <tr>
-            <td>
+            <td style="border: none;">
                 <h2>Decision Tree</h2>
                 <iframe style="height: 300px; width: auto;" src="{{decision_tree}}#toolbar=0" alt=""></iframe>
             </td>
-            <td>
+            <td style="border: none;">
                 <h2>Pruned Decision Tree</h2>
                 <iframe style="height: 300px; width: auto;" src="{{pruned_decision_tree}}#toolbar=0" alt=""></iframe>
             </td>
@@ -33,9 +33,182 @@
     <h3>Summary</h3>
 
     <table>
-        
+        <thead>
+            <tr>
+                <th>Black Box</th>
+                <th>White Box</th>
+                <th>Top K</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Model:  {{b_model}}</td>
+                <td>Explanation Method:  {{w_method}}</td>
+                <td>Explanation Method:  {{t_method}}</td>
+            </tr>
+            <tr>
+                <td>Dataset size:  {{b_dataset_size}}</td>
+                <td>Model:  {{w_model}}</td>
+                <td>Model:  {{t_model}}</td>
+            </tr>
+            <tr>
+                <td>Train/Test Split:  {{b_train_test_split}}</td>
+                <td>Iterations:  {{w_iterations}}</td>
+                <td>Iterations:  {{t_iterations}}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Sample size:  {{w_sample_size}}</td>
+                <td>Sample size:  {{w_sample_size}}</td>
+            </tr>
+            <tr>
+                <br>
+            </tr>
+            <tr>
+                <td></td>
+                <th>Decision Tree Info</th>
+                <th>Decision Tree Info</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Size:  {{w_size}}</td>
+                <td>Size:  {{t_size}}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Depth:  {{w_depth}}</td>
+                <td>Depth:  {{t_depth}}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Leaves:  {{w_leaves}}</td>
+                <td>Leaves:  {{w_leaves}}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Top-k:  {{top_k}}</td>
+            </tr>
+            <tr>
+                <td># Input features:  {{b_input_features}}</td>
+                <td># Input features:  {{w_input_features}}</td>
+                <td># Input features:  {{t_input_features}}</td>
+            </tr>
+            <tr>
+                <td># Output classes: {{b_output_classes}}</td>
+                <td># Output classes: {{w_output_classes}}</td>
+                <td># Output classes: {{t_output_classes}}</td>
+            </tr>
+            <thead>
+                <tr>
+                    <th>Performance</th>
+                    <th>Fidelity</th>
+                    <th>Fidelity</th>
+                </tr>
+            </thead>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>precision</th>
+                            <th>recall</th>
+                            <th>f1-score</th>
+                            <th>support</th>
+                        </tr>
+                        {{b_performance_data}}
+                        <tr>
+                            <th>accuracy</th>
+                            <td></td>
+                            <td></td>
+                            <td>{{b_f1_score_accuracy}}</td>
+                            <td>{{b_support_accuracy}}</td>
+                        </tr>
+                        <tr>
+                            <th>macro avg</th>
+                            <td>{{b_precision_macro_avg}}</td>
+                            <td>{{b_recall_macro_avg}}</td>
+                            <td>{{b_f1_score_macro_avg}}</td>
+                            <td>{{b_support_macro_avg}}</td>
+                        </tr>
+                        <tr>
+                            <th>weighted avg</th>
+                            <td>{{b_precision_weighted_avg}}</td>
+                            <td>{{b_recall_weighted_avg}}</td>
+                            <td>{{b_f1_score_weighted_avg}}</td>
+                            <td>{{b_support_weighted_avg}}</td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>precision</th>
+                            <th>recall</th>
+                            <th>f1-score</th>
+                            <th>support</th>
+                        </tr>
+                        {{w_fidelity_data}}
+                        <tr>
+                            <th>accuracy</th>
+                            <td></td>
+                            <td></td>
+                            <td>{{w_f1_score_accuracy}}</td>
+                            <td>{{w_support_accuracy}}</td>
+                        </tr>
+                        <tr>
+                            <th>macro avg</th>
+                            <td>{{w_precision_macro_avg}}</td>
+                            <td>{{w_recall_macro_avg}}</td>
+                            <td>{{w_f1_score_macro_avg}}</td>
+                            <td>{{w_support_macro_avg}}</td>
+                        </tr>
+                        <tr>
+                            <th>weighted avg</th>
+                            <td>{{w_precision_weighted_avg}}</td>
+                            <td>{{w_recall_weighted_avg}}</td>
+                            <td>{{w_f1_score_weighted_avg}}</td>
+                            <td>{{w_support_weighted_avg}}</td>
+                        </tr>
+                    </table>
+
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>precision</th>
+                            <th>recall</th>
+                            <th>f1-score</th>
+                            <th>support</th>
+                        </tr>
+                        {{t_fidelity_data}}
+                        <tr>
+                            <th>accuracy</th>
+                            <td></td>
+                            <td></td>
+                            <td>{{t_f1_score_accuracy}}</td>
+                            <td>{{t_support_accuracy}}</td>
+                        </tr>
+                        <tr>
+                            <th>macro avg</th>
+                            <td>{{t_precision_macro_avg}}</td>
+                            <td>{{t_recall_macro_avg}}</td>
+                            <td>{{t_f1_score_macro_avg}}</td>
+                            <td>{{t_support_macro_avg}}</td>
+                        </tr>
+                        <tr>
+                            <th>weighted avg</th>
+                            <td>{{t_precision_weighted_avg}}</td>
+                            <td>{{t_recall_weighted_avg}}</td>
+                            <td>{{t_f1_score_weighted_avg}}</td>
+                            <td>{{t_support_weighted_avg}}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
     </table>
-
 </body>
-
 </html>

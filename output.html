@@ -16,11 +16,11 @@
 
     <table>
         <tr>
-            <td>
+            <td style="border: none;">
                 <h2>Decision Tree</h2>
                 <iframe style="height: 300px; width: auto;" src="reports/trust_report_dt.pdf#toolbar=0" alt=""></iframe>
             </td>
-            <td>
+            <td style="border: none;">
                 <h2>Pruned Decision Tree</h2>
                 <iframe style="height: 300px; width: auto;" src="reports/trust_report_pruned_dt.pdf#toolbar=0" alt=""></iframe>
             </td>
@@ -31,11 +31,256 @@
 
     <h2>Trust Report</h2>
     <h3>Summary</h3>
-    
+
     <table>
+        <thead>
+            <tr>
+                <th>Black Box</th>
+                <th>White Box</th>
+                <th>Top K</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Model:  RandomForestClassifier</td>
+                <td>Explanation Method:  Trustee</td>
+                <td>Explanation Method:  Trustee</td>
+            </tr>
+            <tr>
+                <td>Dataset size:  150</td>
+                <td>Model:  DecisionTreeClassifier</td>
+                <td>Model:  DecisionTreeClassifier</td>
+            </tr>
+            <tr>
+                <td>Train/Test Split:  70.00% / 30.00%</td>
+                <td>Iterations:  10</td>
+                <td>Iterations:  10</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Sample size:  30.00%</td>
+                <td>Sample size:  30.00%</td>
+            </tr>
+            <tr>
+                <br>
+            </tr>
+            <tr>
+                <td></td>
+                <th>Decision Tree Info</th>
+                <th>Decision Tree Info</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Size:  5</td>
+                <td>Size:  5</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Depth:  2</td>
+                <td>Depth:  2</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Leaves:  3</td>
+                <td>Leaves:  3</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Top-k:  10</td>
+            </tr>
+            <tr>
+                <td># Input features:  4</td>
+                <td># Input features:  2 (50.00%)</td>
+                <td># Input features:  -</td>
+            </tr>
+            <tr>
+                <td># Output classes: 3</td>
+                <td># Output classes: 3 (100.00%)</td>
+                <td># Output classes: 3 (100.00%)</td>
+            </tr>
+            <thead>
+                <tr>
+                    <th>Performance</th>
+                    <th>Fidelity</th>
+                    <th>Fidelity</th>
+                </tr>
+            </thead>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>precision</th>
+                            <th>recall</th>
+                            <th>f1-score</th>
+                            <th>support</th>
+                        </tr>
+                        
+                <tr>
+                    <th>0</th>
+                    <td>1.000</td>
+                    <td>1.000</td>
+                    <td>1.000</td>
+                    <td>0</td>
+                </tr>
+            
+                <tr>
+                    <th>1</th>
+                    <td>0.824</td>
+                    <td>1.000</td>
+                    <td>0.903</td>
+                    <td>1</td>
+                </tr>
+            
+                <tr>
+                    <th>2</th>
+                    <td>1.000</td>
+                    <td>0.842</td>
+                    <td>0.914</td>
+                    <td>2</td>
+                </tr>
+            
+                        <tr>
+                            <th>accuracy</th>
+                            <td></td>
+                            <td></td>
+                            <td>0.933</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <th>macro avg</th>
+                            <td>0.941</td>
+                            <td>0.947</td>
+                            <td>0.939</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <th>weighted avg</th>
+                            <td>0.945</td>
+                            <td>0.933</td>
+                            <td>0.934</td>
+                            <td>45</td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>precision</th>
+                            <th>recall</th>
+                            <th>f1-score</th>
+                            <th>support</th>
+                        </tr>
+                        
+                <tr>
+                    <th>0</th>
+                    <td>1.000</td>
+                    <td>1.000</td>
+                    <td>1.000</td>
+                    <td>0</td>
+                </tr>
+            
+                <tr>
+                    <th>1</th>
+                    <td>0.933</td>
+                    <td>0.824</td>
+                    <td>0.875</td>
+                    <td>1</td>
+                </tr>
+            
+                <tr>
+                    <th>2</th>
+                    <td>0.833</td>
+                    <td>0.938</td>
+                    <td>0.882</td>
+                    <td>2</td>
+                </tr>
+            
+                        <tr>
+                            <th>accuracy</th>
+                            <td></td>
+                            <td></td>
+                            <td>0.911</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <th>macro avg</th>
+                            <td>0.922</td>
+                            <td>0.920</td>
+                            <td>0.919</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <th>weighted avg</th>
+                            <td>0.916</td>
+                            <td>0.911</td>
+                            <td>0.911</td>
+                            <td>45</td>
+                        </tr>
+                    </table>
 
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>precision</th>
+                            <th>recall</th>
+                            <th>f1-score</th>
+                            <th>support</th>
+                        </tr>
+                        
+                <tr>
+                    <th>0</th>
+                    <td>1.000</td>
+                    <td>1.000</td>
+                    <td>1.000</td>
+                    <td>0</td>
+                </tr>
+            
+                <tr>
+                    <th>1</th>
+                    <td>0.824</td>
+                    <td>1.000</td>
+                    <td>0.903</td>
+                    <td>1</td>
+                </tr>
+            
+                <tr>
+                    <th>2</th>
+                    <td>1.000</td>
+                    <td>0.842</td>
+                    <td>0.914</td>
+                    <td>2</td>
+                </tr>
+            
+                        <tr>
+                            <th>accuracy</th>
+                            <td></td>
+                            <td></td>
+                            <td>0.933</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <th>macro avg</th>
+                            <td>0.941</td>
+                            <td>0.947</td>
+                            <td>0.939</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <th>weighted avg</th>
+                            <td>0.945</td>
+                            <td>0.933</td>
+                            <td>0.934</td>
+                            <td>45</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
     </table>
-
 </body>
-
 </html>
