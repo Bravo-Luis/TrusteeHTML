@@ -3,12 +3,7 @@ from sklearn.ensemble import RandomForestClassifier
 from trustee.report.trust import TrustReport
 import os
 import sys
-parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.append(parent_dir)
-
-import trustee2html
-
-from trustee2html import CLIController
+from CLI import CLIController
 
 iris = datasets.load_iris()
 X, y = datasets.load_iris(return_X_y=True, as_frame=True)

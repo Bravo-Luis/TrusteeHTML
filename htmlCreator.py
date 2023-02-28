@@ -113,7 +113,7 @@ class htmlCreator:
             return b_dict | w_dict | t_dict
         
             
-        def convert_to_html(self, input_file_name = "././template.html", output_file_name = "././output.html") -> None:
+        def convert_to_html(self, input_file_name = "template.html", output_file_name = "output.html") -> None:
             
             with open(input_file_name, "r") as file:
                 template = Template(file.read())

@@ -3,8 +3,8 @@ import webbrowser
 import os
 from jinja2 import Template
 from trustee.report.trust import TrustReport
-from trustee2html.Threshold import Thresholder
-from trustee2html.htmlCreator import htmlCreator
+from Threshold import Thresholder
+from htmlCreator import htmlCreator
 
 class CLIController:
     def __init__(self, trust_report) -> None:
