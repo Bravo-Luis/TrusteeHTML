@@ -55,17 +55,17 @@ class htmlCreator:
                 rows = len(class_values) // 5
                 html_row_template = """
                     <tr>
-                        <th>{{var_one}}</th>
+                        <th style="font-weight: normal;">{{var_one}}</th>
                         <td>{{var_two}}</td>
                         <td>{{var_three}}</td>
                         <td>{{var_four}}</td>
-                        <td>{{var_one}}</td>
+                        <td>{{var_five}}</td>
                     </tr>
                 """
                 html_output = ""
                 for i in range(rows):
                     template = Template(html_row_template)
-                    html_output += template.render(var_one=class_values[i*5], var_two=class_values[i*5+1],var_three=class_values[i*5+2],var_four=class_values[i*5+3], var_five=class_values[i*5+4])
+                    html_output += template.render(var_one=f"{class_values[i*5]}({self.trust_report.class_names[int(class_values[i*5])]})", var_two=class_values[i*5+1],var_three=class_values[i*5+2],var_four=class_values[i*5+3], var_five=class_values[i*5+4])
                 return html_output
             
             b_class_values, b_accuracy_values, b_macro_avg_values, b_weighted_avg_values = process(b)

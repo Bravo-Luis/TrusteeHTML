@@ -57,9 +57,9 @@ class Thresholder:
                 branch_str = f"     branch {j+1}: "
                 for i, node in enumerate(list_of_nodes):
                     if i == len(list_of_nodes) - 1:
-                        branch_str += f"(FEATURE: { self.trust_report.feature_names[node[0]]} {node[2]} {node[3]}) \n"
+                        branch_str += f"(FEATURE: { self.trust_report.feature_names[node[1]]} {node[2]} {node[3]}) \n"
                     else:
-                        branch_str += f"(FEATURE: {self.trust_report.feature_names[node[0]]} {node[2]} {node[3]}) AND "
+                        branch_str += f"(FEATURE: {self.trust_report.feature_names[node[1]]} {node[2]} {node[3]}) AND "
                 result += branch_str
                 
             return f"\nTARGET: {self.trust_report.class_names[target_class]} \n" + result
