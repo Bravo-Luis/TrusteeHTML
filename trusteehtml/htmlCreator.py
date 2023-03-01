@@ -180,7 +180,7 @@ class htmlCreator:
             return {"black_box" : b} | {"white_box" : w} | {"top_k":t}
         
             
-        def convert_to_html(self, input_file_name = "template.html", output_file_name =  "/output.html") -> None:
+        def convert_to_html(self, input_file_name = os.path.dirname(__file__) + "/template.html", output_file_name =  "/output.html") -> None:
             
             output_path = self.output_directory
             if not os.path.exists(output_path):
@@ -201,7 +201,7 @@ class htmlCreator:
             with open(output_path + "/trust_report_summary.json", "w") as file:
                 json.dump(self.json_summary(), file) 
                            
-            src_file = os.getcwd() +"/" + 'style.css'
+            src_file = os.path.dirname(__file__) +"/" + 'style.css'
             dst_dir = output_path + "/style.css"
             shutil.copy(src_file, dst_dir)
             

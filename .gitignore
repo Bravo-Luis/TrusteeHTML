@@ -1,4 +1,2 @@
 __pycache__/
-env/
-reports/
-output.html
+.DS_Store

@@ -3,7 +3,7 @@ from sklearn.ensemble import RandomForestClassifier
 from trustee.report.trust import TrustReport
 import os
 import sys
-from CLI import CLIController
+from trusteehtml.CLI import CLIController
 
 iris = datasets.load_iris()
 X, y = datasets.load_iris(return_X_y=True, as_frame=True)

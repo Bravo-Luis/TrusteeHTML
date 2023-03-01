@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>
+        Trustee2HTML
+    </title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+
+<body>
+
+    <h1>TRUSTEE 2 HTML</h1>
+
+    <table>
+        <tr>
+            <td style="border: none;">
+                <a href="/Users/luisbravo/Desktop/TrusteeHTML/iris/reports/trust_report_dt.pdf">
+                    <h2>Decision Tree</h2>
+                </a>
+                <iframe style="height: 300px; width: auto;" src="/Users/luisbravo/Desktop/TrusteeHTML/iris/reports/trust_report_dt.pdf#toolbar=0" alt=""></iframe>
+            </td>
+            <td style="border: none;">
+                <a href="/Users/luisbravo/Desktop/TrusteeHTML/iris/reports/trust_report_pruned_dt.pdf">
+                    <h2>Pruned Decision Tree</h2>
+                </a>
+                <iframe style="height: 300px; width: auto;" src="/Users/luisbravo/Desktop/TrusteeHTML/iris/reports/trust_report_pruned_dt.pdf#toolbar=0" alt=""></iframe>
+            </td>
+        </tr>
+
+    </table>
+
+
+    <h2>Trust Report</h2>
+    <h3>Summary</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Black Box</th>
+                <th>White Box</th>
+                <th>Top K</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Model:  RandomForestClassifier</td>
+                <td>Explanation Method:  Trustee</td>
+                <td>Explanation Method:  Trustee</td>
+            </tr>
+            <tr>
+                <td>Dataset size:  150</td>
+                <td>Model:  DecisionTreeClassifier</td>
+                <td>Model:  DecisionTreeClassifier</td>
+            </tr>
+            <tr>
+                <td>Train/Test Split:  70.00% / 30.00%</td>
+                <td>Iterations:  10</td>
+                <td>Iterations:  10</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Sample size:  30.00%</td>
+                <td>Sample size:  30.00%</td>
+            </tr>
+            <tr>
+                <br>
+            </tr>
+            <tr>
+                <td></td>
+                <th>Decision Tree Info</th>
+                <th>Decision Tree Info</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Size:  5</td>
+                <td>Size:  5</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Depth:  2</td>
+                <td>Depth:  2</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Leaves:  3</td>
+                <td>Leaves:  3</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Top-k:  10</td>
+            </tr>
+            <tr>
+                <td># Input features:  4</td>
+                <td># Input features:  2 (50.00%)</td>
+                <td># Input features:  -</td>
+            </tr>
+            <tr>
+                <td># Output classes: 3</td>
+                <td># Output classes: 3 (100.00%)</td>
+                <td># Output classes: 3 (100.00%)</td>
+            </tr>
+            <thead>
+                <tr>
+                    <th>Performance</th>
+                    <th>Fidelity</th>
+                    <th>Fidelity</th>
+                </tr>
+            </thead>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>precision</th>
+                            <th>recall</th>
+                            <th>f1-score</th>
+                            <th>support</th>
+                        </tr>
+                        
+                    <tr>
+                        <th style="font-weight: normal;">0(setosa)</th>
+                        <td>1.000</td>
+                        <td>1.000</td>
+                        <td>1.000</td>
+                        <td>13</td>
+                    </tr>
+                
+                    <tr>
+                        <th style="font-weight: normal;">1(versicolor)</th>
+                        <td>0.842</td>
+                        <td>0.941</td>
+                        <td>0.889</td>
+                        <td>17</td>
+                    </tr>
+                
+                    <tr>
+                        <th style="font-weight: normal;">2(virginica)</th>
+                        <td>0.923</td>
+                        <td>0.800</td>
+                        <td>0.857</td>
+                        <td>15</td>
+                    </tr>
+                
+                        <tr>
+                            <th>accuracy</th>
+                            <td></td>
+                            <td></td>
+                            <td>0.911</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <th>macro avg</th>
+                            <td>0.922</td>
+                            <td>0.914</td>
+                            <td>0.915</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <th>weighted avg</th>
+                            <td>0.915</td>
+                            <td>0.911</td>
+                            <td>0.910</td>
+                            <td>45</td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>precision</th>
+                            <th>recall</th>
+                            <th>f1-score</th>
+                            <th>support</th>
+                        </tr>
+                        
+                    <tr>
+                        <th style="font-weight: normal;">0(setosa)</th>
+                        <td>1.000</td>
+                        <td>1.000</td>
+                        <td>1.000</td>
+                        <td>13</td>
+                    </tr>
+                
+                    <tr>
+                        <th style="font-weight: normal;">1(versicolor)</th>
+                        <td>1.000</td>
+                        <td>0.842</td>
+                        <td>0.914</td>
+                        <td>19</td>
+                    </tr>
+                
+                    <tr>
+                        <th style="font-weight: normal;">2(virginica)</th>
+                        <td>0.812</td>
+                        <td>1.000</td>
+                        <td>0.897</td>
+                        <td>13</td>
+                    </tr>
+                
+                        <tr>
+                            <th>accuracy</th>
+                            <td></td>
+                            <td></td>
+                            <td>0.933</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <th>macro avg</th>
+                            <td>0.938</td>
+                            <td>0.947</td>
+                            <td>0.937</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <th>weighted avg</th>
+                            <td>0.946</td>
+                            <td>0.933</td>
+                            <td>0.934</td>
+                            <td>45</td>
+                        </tr>
+                    </table>
+
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>precision</th>
+                            <th>recall</th>
+                            <th>f1-score</th>
+                            <th>support</th>
+                        </tr>
+                        
+                    <tr>
+                        <th style="font-weight: normal;">0(setosa)</th>
+                        <td>1.000</td>
+                        <td>1.000</td>
+                        <td>1.000</td>
+                        <td>13</td>
+                    </tr>
+                
+                    <tr>
+                        <th style="font-weight: normal;">1(versicolor)</th>
+                        <td>1.000</td>
+                        <td>0.842</td>
+                        <td>0.914</td>
+                        <td>19</td>
+                    </tr>
+                
+                    <tr>
+                        <th style="font-weight: normal;">2(virginica)</th>
+                        <td>0.812</td>
+                        <td>1.000</td>
+                        <td>0.897</td>
+                        <td>13</td>
+                    </tr>
+                
+                        <tr>
+                            <th>accuracy</th>
+                            <td></td>
+                            <td></td>
+                            <td>0.933</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <th>macro avg</th>
+                            <td>0.938</td>
+                            <td>0.947</td>
+                            <td>0.937</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <th>weighted avg</th>
+                            <td>0.946</td>
+                            <td>0.933</td>
+                            <td>0.934</td>
+                            <td>45</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
