@@ -15,4 +15,5 @@ command line:
 
 <img width="1414" alt="Screenshot 2023-02-27 at 11 27 12 PM" src="https://user-images.githubusercontent.com/91937163/221785658-db5b7ec7-0512-4db4-b4f7-2d3f2bcfbc42.png">
 
+'target all' called
 <img width="2445" alt="Screenshot 2023-02-27 at 11 29 19 PM" src="https://user-images.githubusercontent.com/91937163/221785744-3ef9aa5d-e998-4d23-827f-c643c2ee3b46.png">
