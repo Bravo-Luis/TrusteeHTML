@@ -2,6 +2,7 @@ from jinja2 import Template
 from trustee.report.trust import TrustReport   
 import os
 import shutil
+import json
 
 
 class htmlCreator:
@@ -9,7 +10,7 @@ class htmlCreator:
             self.trust_report = trust_report
             self.output_directory = output_directory
             
-        def trust_report_summary(self, trust_report : TrustReport):
+        def trust_report_summary(self, trust_report : TrustReport, for_json=False):
             
             b_summary_info = {"b_model" : type(trust_report.blackbox).__name__,
                               "b_dataset_size" : trust_report.dataset_size, 
@@ -39,9 +40,38 @@ class htmlCreator:
                               "t_output_classes" : f"{trust_report.min_dt.tree_.n_classes[0]} ({trust_report.min_dt.tree_.n_classes[0] / trust_report.bb_n_output_classes * 100:.2f}%)" ,
                               "t_fidelity_data" : trust_report._score_report(trust_report.y_pred, trust_report.min_dt_y_pred)}
             
+            if for_json:
+                
+                b_summary_info = {"model" : f"{type(trust_report.blackbox).__name__}",
+                                "dataset_size" : trust_report.dataset_size, 
+                                "train_test_split" : f"{trust_report.train_size * 100:.2f}% / {(1 - trust_report.train_size) * 100:.2f}%", 
+                                "input_features" : trust_report.bb_n_input_features, 
+                                "output_classes" : trust_report.bb_n_output_classes}
+                w_summary_info = {"method" : "Trustee",
+                                "model" : f"{type(trust_report.max_dt).__name__}",
+                                "iterations" : trust_report.trustee_num_iter, 
+                                "sample_size" : f"{trust_report.trustee_sample_size * 100:.2f}%", 
+                                "size" : trust_report.max_dt.tree_.node_count, 
+                                "depth" : trust_report.max_dt.get_depth(), 
+                                "leaves" : f"{trust_report.max_dt.get_n_leaves()}", 
+                                "input_features": f"{trust_report.trustee.get_n_features()} ({trust_report.trustee.get_n_features() / trust_report.bb_n_input_features * 100:.2f}%)", 
+                                "output_classes" : f"{trust_report.trustee.get_n_classes()} ({trust_report.trustee.get_n_classes() / trust_report.bb_n_output_classes * 100:.2f}%)"}
+                t_summary_info = {"method": "Trustee",
+                                "model" : f"{type(trust_report.min_dt).__name__}",
+                                "iterations" : trust_report.trustee_num_iter, 
+                                "sample_size" : f"{trust_report.trustee_sample_size * 100:.2f}%", 
+                                "size" : trust_report.min_dt.tree_.node_count, 
+                                "depth" : trust_report.min_dt.get_depth(), 
+                                "leaves" : f"{trust_report.min_dt.get_n_leaves()}", 
+                                "input_features" : "-" , 
+                                "top_k" : trust_report.top_k, 
+                                "output_classes" : f"{trust_report.min_dt.tree_.n_classes[0]} ({trust_report.min_dt.tree_.n_classes[0] / trust_report.bb_n_output_classes * 100:.2f}%)"}
+                
+                return b_summary_info, w_summary_info, t_summary_info
+            
             return (b_summary_info | w_summary_info | t_summary_info)
         
-        def summary_performance(self, trust_report):
+        def summary_performance(self, trust_report, for_json=False):
             b = trust_report._score_report(trust_report.y_test, trust_report.y_pred).split()
             w = trust_report._score_report(trust_report.y_pred, trust_report.max_dt_y_pred).split()
             t = trust_report._score_report(trust_report.y_pred, trust_report.min_dt_y_pred).split()
@@ -69,6 +99,13 @@ class htmlCreator:
                     template = Template(html_row_template)
                     html_output += template.render(var_one=f"{class_values[i*5]}({self.trust_report.class_names[int(class_values[i*5])]})", var_two=class_values[i*5+1],var_three=class_values[i*5+2],var_four=class_values[i*5+3], var_five=class_values[i*5+4])
                 return html_output
+            
+            def class_values_into_dict(class_values):
+                rows = len(class_values) // 5
+                dict_for_json = {}
+                for i in range(rows):
+                    dict_for_json[f"{class_values[i*5]}({self.trust_report.class_names[int(class_values[i*5])]})"] = {"precision" : class_values[i*5+1], "recall" : class_values[i*5+2], "f1_score" : class_values[i*5+3], "support" : class_values[i*5+4]}
+                return dict_for_json
             
             b_class_values, b_accuracy_values, b_macro_avg_values, b_weighted_avg_values = process(b)
             w_class_values, w_accuracy_values, w_macro_avg_values, w_weighted_avg_values = process(w)
@@ -112,7 +149,35 @@ class htmlCreator:
                       "t_f1_score_weighted_avg" : t_weighted_avg_values[2], 
                       "t_support_weighted_avg" : t_weighted_avg_values[3]}
             
+            if for_json:
+                b_dict = {"class_performance_data" : class_values_into_dict(b_class_values),
+                          "accuracy" : {"f1_score" : b_accuracy_values[0], "support" : b_accuracy_values[1]}, 
+                          "macro_avg" : {"precision" : b_macro_avg_values[0], "recall" : b_macro_avg_values[1], "f1_score" : b_macro_avg_values[2], "support" : b_macro_avg_values[3]},
+                          "weighted_avg" : {"precision" : b_weighted_avg_values[0], "recall" : b_weighted_avg_values[1], "f1_score" : b_weighted_avg_values[2], "support" : b_weighted_avg_values[3]}}
+                
+                w_dict = {"class_performance_data" : class_values_into_dict(w_class_values),
+                          "accuracy" : {"f1_score" : w_accuracy_values[0], "support" : w_accuracy_values[1]}, 
+                          "macro_avg" : {"precision" : w_macro_avg_values[0], "recall" : w_macro_avg_values[1], "f1_score" : w_macro_avg_values[2], "support" : w_macro_avg_values[3]},
+                          "weighted_avg" : {"precision" : w_weighted_avg_values[0], "recall" : w_weighted_avg_values[1], "f1_score" : w_weighted_avg_values[2], "support" : w_weighted_avg_values[3]}}
+                
+                t_dict = {"class_performance_data" : class_values_into_dict(t_class_values),
+                          "accuracy" : {"f1_score" : t_accuracy_values[0], "support" : t_accuracy_values[1]}, 
+                          "macro_avg" : {"precision" : t_macro_avg_values[0], "recall" : t_macro_avg_values[1], "f1_score" : t_macro_avg_values[2], "support" : t_macro_avg_values[3]},
+                          "weighted_avg" : {"precision" : t_weighted_avg_values[0], "recall" : t_weighted_avg_values[1], "f1_score" : t_weighted_avg_values[2], "support" : t_weighted_avg_values[3]}}
+                
+                return b_dict , w_dict , t_dict
+
             return b_dict | w_dict | t_dict
+        
+        def json_summary(self):
+            b_summary_info, w_summary_info, t_summary_info = self.trust_report_summary(self.trust_report, True)
+            b_dict , w_dict , t_dict = self.summary_performance(self.trust_report,True)
+            
+            b = {"info" : b_summary_info} | {"performance Data" : b_dict}
+            w = {"tree Info" : w_summary_info} | {"fidelity Data" : w_dict}
+            t = {"tree Info" : t_summary_info} | {"fidelity Data" :t_dict}
+            
+            return {"black_box" : b} | {"white_box" : w} | {"top_k":t}
         
             
         def convert_to_html(self, input_file_name = "template.html", output_file_name =  "/output.html") -> None:
@@ -132,7 +197,10 @@ class htmlCreator:
 
             with open(output_path + output_file_name, "w") as file:
                 file.write(html)
-            
+                
+            with open(output_path + "/trust_report_summary.json", "w") as file:
+                json.dump(self.json_summary(), file) 
+                           
             src_file = os.getcwd() +"/" + 'style.css'
             dst_dir = output_path + "/style.css"
             shutil.copy(src_file, dst_dir)
