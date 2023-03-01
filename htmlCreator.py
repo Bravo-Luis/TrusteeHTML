@@ -1,11 +1,13 @@
 from jinja2 import Template
 from trustee.report.trust import TrustReport   
 import os
+import shutil
 
 
 class htmlCreator:
-        def __init__(self, trust_report : TrustReport) -> None:
+        def __init__(self, trust_report : TrustReport, output_directory) -> None:
             self.trust_report = trust_report
+            self.output_directory = output_directory
             
         def trust_report_summary(self, trust_report : TrustReport):
             
@@ -113,17 +115,26 @@ class htmlCreator:
             return b_dict | w_dict | t_dict
         
             
-        def convert_to_html(self, input_file_name = "template.html", output_file_name = "output.html") -> None:
+        def convert_to_html(self, input_file_name = "template.html", output_file_name =  "/output.html") -> None:
+            
+            output_path = self.output_directory
+            if not os.path.exists(output_path):
+                os.makedirs(output_path)
             
             with open(input_file_name, "r") as file:
                 template = Template(file.read())
             
-            self.trust_report._save_dts(f"reports", False)
+            self.trust_report._save_dts(f"{self.output_directory}/reports", False)
             
-            trust_report_information_dict = self.trust_report_summary(self.trust_report) | self.summary_performance(self.trust_report)| {"decision_tree" : os.getcwd() + "/reports/trust_report_dt.pdf", "pruned_decision_tree" : os.getcwd() + "/reports/trust_report_pruned_dt.pdf"}
+            trust_report_information_dict = self.trust_report_summary(self.trust_report) | self.summary_performance(self.trust_report)| {"decision_tree" : os.getcwd() + "/" + self.output_directory + "/reports/trust_report_dt.pdf", "pruned_decision_tree" : os.getcwd() + "/" + self.output_directory +"/reports/trust_report_pruned_dt.pdf"}
             
             html = template.render(trust_report_information_dict)
-            
-            with open(output_file_name, "w") as file:
+
+            with open(output_path + output_file_name, "w") as file:
                 file.write(html)
+            
+            src_file = os.getcwd() +"/" + 'style.css'
+            dst_dir = output_path + "/style.css"
+            shutil.copy(src_file, dst_dir)
+            
         

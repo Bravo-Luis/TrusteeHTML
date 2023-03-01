@@ -6,7 +6,7 @@ from Threshold import Thresholder
 from htmlCreator import htmlCreator
 
 class CLIController:
-    def __init__(self, trust_report) -> None:
+    def __init__(self, trust_report, output_directory) -> None:
         """
         Initializes the CLIController class.
 
@@ -21,7 +21,8 @@ class CLIController:
             'target all' to list all branches to all target classes
             """
         self.thresholder = Thresholder(trust_report)
-        self.html_creator = htmlCreator(trust_report)
+        self.output_directory = output_directory
+        self.html_creator = htmlCreator(trust_report, output_directory)
         self.explanation_path = ""
         
     def run(self):
@@ -39,7 +40,7 @@ class CLIController:
                 elif command[0] == "open":
                     if self.explanation_path == "":
                         # create the html file and open it in the web browser
-                        filename = 'file:///'+os.getcwd() + "/output.html"
+                        filename = 'file:///'+os.getcwd() +"/" +self.output_directory + "/output.html"
                         self.html_creator.convert_to_html()
                         print("building html file...")
                         print(f"opening {filename} in web browser... \n")

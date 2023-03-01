@@ -29,5 +29,5 @@ trust_report = TrustReport(
     is_classify=True,
 )
 
-controller = CLIController(trust_report)
+controller = CLIController(trust_report, "iris")
 controller.run()
