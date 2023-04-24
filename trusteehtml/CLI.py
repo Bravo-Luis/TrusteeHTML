@@ -52,6 +52,8 @@ class CLIController:
                         webbrowser.open_new_tab(self.explanation_path)
                 elif command[0] == "help":
                     print(self.guide)
+                elif command[0] == "chatGPT":
+                    print(self.thresholder.paths)
                     
             elif len(command) == 2 and command[0] == 'target':
                 if command[1].isdigit():

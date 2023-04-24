@@ -5,3 +5,66 @@ th {
 td {
     border: 1px solid black;
 }
+
+section {
+  margin-top: 5%;
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333;
+  padding: 10px;
+  box-sizing: border-box;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 5px;
+  margin-right: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+nav a:hover {
+  background-color: #fff;
+  color: #333;
+  box-shadow: 0px 0px 5px #333;
+}
+
+nav button {
+  color: #fff;
+  background-color: #333;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+nav button:hover {
+  background-color: #fff;
+  color: #333;
+  box-shadow: 0px 0px 5px #333;
+}
+
+.gallery-item {
+  flex-basis: calc(33.33% - 10px);
+  margin-bottom: 20px;
+}
+
+.gallery-item img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+}

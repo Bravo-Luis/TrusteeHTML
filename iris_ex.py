@@ -23,11 +23,12 @@ trust_report = TrustReport(
     analyze_branches=True,
     analyze_stability=True,
     top_k=10,
-    verbose=False,
+    verbose=True,
     class_names=iris.target_names,
     feature_names=iris.feature_names,
     is_classify=True,
 )
 
 controller = CLIController(trust_report, "iris")
+print(trust_report)
 controller.run()

@@ -27,7 +27,7 @@ trust_report = TrustReport(
         analyze_branches=True,
         analyze_stability=True,
         top_k=10,
-        verbose=False,
+        verbose=True,
         class_names=['Benign','Exploits','Reconnaissance','DoS','Generic','Shellcode',
  'Backdoor','Fuzzers','Worms','Analysis','injection','DDoS','scanning',
  'password','mitm','xss','ransomware','Infilteration','Bot','Brute Force',
