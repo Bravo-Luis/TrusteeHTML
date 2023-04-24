@@ -11,30 +11,27 @@
 </head>
 
 
-<body>    
+<body>   
 
-    <table style="margin-top: 5%;">
-        <tr>
-            <td style="border: none;">
-                <a href="{{decision_tree}}">
-                    <h2>Decision Tree</h2>
-                </a>
-                <iframe style="height: 300px; width: auto;" src="{{decision_tree}}#toolbar=0" alt=""></iframe>
-            </td>
-            <td style="border: none;">
-                <a href="{{pruned_decision_tree}}">
-                    <h2>Pruned Decision Tree</h2>
-                </a>
-                <iframe style="height: 300px; width: auto;" src="{{pruned_decision_tree}}#toolbar=0" alt=""></iframe>
-            </td>
-        </tr>
-    </table>
+    <h1>Trustee Trust Report</h1>
 
+    <a href="{{decision_tree}}">
+        <h2>Decision Tree</h2>
+    </a>
+    <a href="{{pruned_decision_tree}}">
+        <h2>Pruned Decision Tree</h2>
+    </a>
 
-    <div id="Trust Summary" style="padding-top: 5%;">
-        <h2>Trust Summary</h2>
+    <div id="Trust Summary">
     </div>
     <table>
+        <thead>
+            <tr>
+                <th colspan="3">
+                    <h3>Trust Summary</h3>
+                </th>
+            </tr>
+        </thead>
         <thead>
             <tr>
                 <th>Black Box</th>
@@ -212,19 +209,14 @@
             </tr>
         </tbody>
     </table>
-
-        <div id="Trust Report" style="padding-top: 5%;">
-            <h2>Trust Report</h2>
-        </div>
-        <h3>Single Run Analysis</h3>
-
     <table>
+        <thead><th><h3>Single Run Analysis</h3></th></thead>
         <tbody>
             <tr>
-                <tr>
+                <td>
                     <table>
                         <thead>
-                            <h4>Top {{s_r_features_num}} Features</h4>
+                            <tr><th colspan="3"><h4>Top {{s_r_features_num}} Features</h4></th></tr>
                             <tr>
                                 <th>Feature</th>
                                 <th># of Nodes (%)</th>
@@ -235,11 +227,13 @@
                             {{s_r_feature_body}}
                         </tbody>
                     </table>
-                </tr>
-                <tr>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <table>
                         <thead>
-                            <h4>Top {{s_r_nodes_num}} Nodes</h4>
+                            <tr><th colspan="4"><h4>Top {{s_r_nodes_num}} Nodes</h4></th></tr>
                             <tr>
                                 <th>Decision</th>
                                 <th>Gini Split - ↓</th>
@@ -251,11 +245,13 @@
                            {{s_r_nodes_body}}
                         </tbody>
                     </table>
-                </tr>
-                <tr>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <table>
                         <thead>
-                            <h4>Top {{s_r_branches_num}} Branches</h4>
+                            <tr><th colspan="4"><h4>Top {{s_r_branches_num}} Branches</h4></th></tr>
                             <tr>
                                 <th>Rule</th>
                                 <th>Decision (P(x))</th>
@@ -267,85 +263,125 @@
                             {{s_r_branches_body}}
                         </tbody>
                     </table>
-                </tr>
+                </td>
             </tr>
         </tbody>
     </table>
 
-    <h3>Prunning Analysis</h3>
-    <h4>Trustee Top-k Iteration</h4>
+
     <table>
+        <thead><tr><th colspan="6"><h3>Prunning Analysis</h3></th></tr></thead>
         <tbody>
-            <tr>
-                <th> k </th>
-                <th>DT Size</th>
-                <th>DT Depth</th>
-                <th>DT Num Leaves</th>
-                <th>Performance</th>
-                <th>Fidelity</th>
-            </tr>
-            {{TrusteeTopKIterationBody}}
-        </tbody>
-    </table>
-    <h4>CCP Alpha Iteration</h4>
-    <table>
-        <tbody>
-            <tr>
-                <th>Alpha</th>
-                <th>Gini</th>
-                <th>DT Size</th>
-                <th>DT Depth</th>
-                <th>DT Num Leaves</th>
-                <th>Performance</th>
-                <th>Fidelity</th>
-            </tr>
-            {{CCPAlphaBody}}
-        </tbody>
-    </table>
-    <h4>Max Depth Iteration</h4>
-    <table>
-        <tbody>
-            <tr>
-                <th>Max Depth</th>
-                <th>DT Size</th>
-                <th>Dt Depth</th>
-                <th>DT Num Leaves</th>
-                <th>Performance</th>
-                <th>Fidelity</th>
-            </tr>
-            {{MaxDepthBody}}
-        </tbody>
-    </table>
-    <h4>Max Leaves Iteration</h4>
-    <table>
-        <tbody>
-            <tr>
-                <th>Max Leaves</th>
-                <th>DT Size</th>
-                <th>Dt Depth</th>
-                <th>DT Num Leaves</th>
-                <th>Performance</th>
-                <th>Fidelity</th>
-            </tr>
-            {{MaxLeavesBody}}
+        <tr>
+            <td>
+                <table>
+                    <thead>
+                        <tr><th colspan="6"><h4>Trustee Top-k Iteration</h4></th></tr>
+                        <tr>
+                            <th> k </th>
+                            <th>DT Size</th>
+                            <th>DT Depth</th>
+                            <th>DT Num Leaves</th>
+                            <th>Performance</th>
+                            <th>Fidelity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        {{TrusteeTopKIterationBody}}
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <thead>
+                        <tr><th colspan="7"><h4>CCP Alpha Iteration</h4></th></tr>
+                        <tr>
+                            <th>Alpha</th>
+                            <th>Gini</th>
+                            <th>DT Size</th>
+                            <th>DT Depth</th>
+                            <th>DT Num Leaves</th>
+                            <th>Performance</th>
+                            <th>Fidelity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{CCPAlphaBody}}
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <thead>
+                        <tr><th colspan="6"><h4>Max Depth Iteration</h4></th></tr>
+                        <tr>
+                            <th>Max Depth</th>
+                            <th>DT Size</th>
+                            <th>Dt Depth</th>
+                            <th>DT Num Leaves</th>
+                            <th>Performance</th>
+                            <th>Fidelity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{MaxDepthBody}}
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <thead>
+                        <tr><th colspan="6"><h4>Max Leaves Iteration</h4></th></tr>
+                        <tr>
+                            <th>Max Leaves</th>
+                            <th>DT Size</th>
+                            <th>Dt Depth</th>
+                            <th>DT Num Leaves</th>
+                            <th>Performance</th>
+                            <th>Fidelity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{MaxLeavesBody}}
+                    </tbody>
+                </table>
+            </td>
+        </tr>
         </tbody>
     </table>
 
-    <h3>Repeated-run Analysis</h3>
-    <h4>Iterative Feature Removal</h4>
+            
     <table>
+        <thead><tr><th><h3>Repeated-run Analysis</h3></th></tr></thead>
         <tbody>
             <tr>
-                <th>Iteration</th>
-                <th>Feature Removed</th>
-                <th># Features Removed</th>
-                <th>Performance</th>
-                <th>Decision Tree Size</th>
-                <th>Fidelity</th>
+                <td>
+                    <table>
+                        <thead>
+                            <tr><th colspan="6"><h4>Iterative Feature Removal</h4></th></tr>
+                            <tr>
+                                <th>Iteration</th>
+                                <th>Feature Removed</th>
+                                <th># Features Removed</th>
+                                <th>Performance</th>
+                                <th>Decision Tree Size</th>
+                                <th>Fidelity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{IterativeFeatureRemovalBody}}
+                        </tbody>
+                    </table>
+                </td>
             </tr>
-            {{IterativeFeatureRemovalBody}}
         </tbody>
     </table>
-
 </body>
 </html>

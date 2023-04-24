@@ -68,3 +68,10 @@ nav button:hover {
   max-height: 300px;
   object-fit: cover;
 }
+
+iframe {
+  max-height: 500px;
+  width: 100%;
+  height: 100px;
+  padding-bottom: calc(100% / var(--aspect-ratio));
+}
