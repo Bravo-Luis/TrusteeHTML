@@ -1,0 +1,22 @@
+strict digraph subtree {
+	information0 [label="Target class is setosa.
+The height of the Target leaf is 2.
+The Threshold type is quart impurity.
+" shape=box]
+	"node((1, 2, 3, 0.7, 0.64285714, 14, 14.), 0)" [label="feature = petal width (cm)
+threshold = 0.7
+impurity = 0.64
+samples = 14
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((-1, -1, -2, -2., 0., 6, 6.), 1)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 6, 6.), 1)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 6, 6.), 1)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 6, 6.), 1)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 6, 6.), 1)" [label="***setosa Leaf***
+feature = petal length (cm)
+threshold = -2.0
+impurity = 0.0
+samples = 6
+class_Name = setosa" fillcolor="#40e0d0" shape=ellipse style=filled]
+	"node((1, 2, 3, 0.7, 0.64285714, 14, 14.), 0)" -> "node((-1, -1, -2, -2., 0., 6, 6.), 1)" [label="petal length (cm) <= -2.0" len=1.0]
+}

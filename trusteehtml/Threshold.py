@@ -73,3 +73,6 @@ class Thresholder:
         """
         for i in range(len(self.trust_report.class_names)):
             print(self.find_paths_to_class(i))
+            
+            
+    

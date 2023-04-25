@@ -1,0 +1,28 @@
+strict digraph subtree {
+	information0 [label="Target class is versicolor.
+The height of the Target leaf is 3.
+The Threshold type is custom.
+" shape=box]
+	"node((1, 2, 3, 0.7, 0.64285714, 14, 14.), 0)" [label="feature = petal width (cm)
+threshold = 0.7
+impurity = 0.64
+samples = 14
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((3, 4, 2, 4.95000005, 0.46875, 8, 8.), 2)" [label="feature = petal length (cm)
+threshold = 4.95
+impurity = 0.47
+samples = 8
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((1, 2, 3, 0.7, 0.64285714, 14, 14.), 0)" -> "node((3, 4, 2, 4.95000005, 0.46875, 8, 8.), 2)" [label="petal length (cm) > 4.95" len=1.0]
+	"node((-1, -1, -2, -2., 0., 5, 5.), 3)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 5, 5.), 3)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 5, 5.), 3)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 5, 5.), 3)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 5, 5.), 3)" [label="***versicolor Leaf***
+feature = petal length (cm)
+threshold = -2.0
+impurity = 0.0
+samples = 5
+class_Name = versicolor" fillcolor="#40e0d0" shape=ellipse style=filled]
+	"node((3, 4, 2, 4.95000005, 0.46875, 8, 8.), 2)" -> "node((-1, -1, -2, -2., 0., 5, 5.), 3)" [label="petal length (cm) <= -2.0" len=1.0]
+}

@@ -4,7 +4,7 @@ from copy import deepcopy
 import os
 import shutil
 import json
-
+import glob
 
 class htmlCreator:
         def __init__(self, trust_report : TrustReport, output_directory) -> None:
@@ -744,6 +744,44 @@ class htmlCreator:
                     body += full_row_temp.render(var_one=i["it"], var_two=self.trust_report.feature_names[i["feature_removed"]] if self.trust_report.feature_names else i["feature_removed"], var_three=i["n_features_removed"],var_four=p_table + p_footer, var_five=i["dt"].tree_.node_count, var_six=f_table + f_footer)               
                 return {"IterativeFeatureRemovalBody" : body}
             
+        def Thresholds(self):
+            header = "<h1>Thresholds</h1>"
+            htmlTemp = """
+                <a href="{{img_src}}">
+                    <h2>{{threshold_values}}</h2>
+                </a>
+            """
+            out = ""
+            dir = f"./{self.output_directory}/reports/*.png"
+            pdfFiles = []
+            for file in glob.glob(dir):
+                if file[-9:-4] == "lab56":
+                    pdfFiles.append(file)
+                    
+            if len(pdfFiles) == 0:
+                print("No Threshold")
+                return {"Thresholds" : out}
+            
+            for file in pdfFiles:
+                temp = Template(htmlTemp)
+                index = file.rfind("subtree")
+                values = file[index:]
+                values = values.replace("_lab56.png", "")
+                values = values.replace("_"," ")
+                values = values.split()
+                if len(values) == 3:
+                    if values[1] == "qi":
+                        out += temp.render(threshold_values=f"Quart Impurity: {self.trust_report.class_names[int(values[2])]}", img_src=file[file.rfind("reports"):])
+                    elif values[1] == "aic":
+                        out += temp.render(threshold_values=f"Avg Impurity Change: {self.trust_report.class_names[int(values[2])]}", img_src=file[file.rfind("reports"):])
+                    elif values[1] == "full":
+                        out += temp.render(threshold_values=f"Full: {self.trust_report.class_names[int(values[2])]}", img_src=file[file.rfind("reports"):])
+                elif len(values) == 4:
+                    if values[1] == "cus":
+                        out += temp.render(threshold_values=f"Custom: {self.trust_report.class_names[int(values[2])]}, limit:{values[2]}", img_src=file[file.rfind("reports"):])
+            return {"Thresholds" : header + out}
+            
+            
         def convert_to_html(self, input_file_name = os.path.dirname(__file__) + "/template.html", output_file_name =  "/output.html") -> None:
             
             output_path = self.output_directory
@@ -755,7 +793,7 @@ class htmlCreator:
             
             self.trust_report._save_dts(f"{self.output_directory}/reports", False)
             
-            trust_report_information_dict = self.trust_report_summary(self.trust_report) | self.summary_performance(self.trust_report)| self.TopKIterationBody()|self.CCPAlphaBody()| self.MaxDepthBody()|self.MaxLeavesBody()|self.IterativeFeatureRemovalBody() |{"decision_tree" : os.getcwd() + "/" + self.output_directory + "/reports/trust_report_dt.pdf", "pruned_decision_tree" : os.getcwd() + "/" + self.output_directory +"/reports/trust_report_pruned_dt.pdf"}
+            trust_report_information_dict = self.trust_report_summary(self.trust_report) | self.summary_performance(self.trust_report)| self.TopKIterationBody()|self.CCPAlphaBody()| self.MaxDepthBody()|self.MaxLeavesBody()|self.IterativeFeatureRemovalBody() |self.Thresholds()|{"decision_tree" : os.getcwd() + "/" + self.output_directory + "/reports/trust_report_dt.pdf", "pruned_decision_tree" : os.getcwd() + "/" + self.output_directory +"/reports/trust_report_pruned_dt.pdf"}
             trust_report_information_dict = trust_report_information_dict | self.single_run_report()
             html = template.render(trust_report_information_dict)
 

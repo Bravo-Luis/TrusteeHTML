@@ -1,0 +1,48 @@
+strict digraph subtree {
+	information0 [label="Target class is Reconnaissance.
+The height of the Target leaf is 7.
+The Threshold type is quart impurity.
+" shape=box]
+	"node((2746, 2793, 8, 19.5, 0.41174762, 607, 607.), 2745)" [label="feature = TCP_FLAGS
+threshold = 19.5
+impurity = 0.41
+samples = 607
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((-1, -1, -2, -2., 0., 49, 49.), 2793)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 49, 49.), 2793)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 49, 49.), 2793)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 49, 49.), 2793)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 49, 49.), 2793)" [label="***Reconnaissance Leaf***
+feature = TCP_FLAGS
+threshold = -2.0
+impurity = 0.0
+samples = 49
+class_Name = Reconnaissance" fillcolor="#40e0d0" shape=ellipse style=filled]
+	"node((2746, 2793, 8, 19.5, 0.41174762, 607, 607.), 2745)" -> "node((-1, -1, -2, -2., 0., 49, 49.), 2793)" [label="TCP_FLAGS > -2.0" len=1.0]
+	information1 [label="Target class is Reconnaissance.
+The height of the Target leaf is 12.
+The Threshold type is quart impurity.
+" shape=box]
+	"node((3027, 3032, 9, 0.829694, 0.1496, 50, 50.), 3026)" [label="feature = FLOW_DURATION_MILLISECONDS
+threshold = 0.83
+impurity = 0.15
+samples = 50
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((3033, 3034, 4, -0.0151996, 0.04253308, 46, 46.), 3032)" [label="feature = IN_BYTES
+threshold = -0.02
+impurity = 0.04
+samples = 46
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((3027, 3032, 9, 0.829694, 0.1496, 50, 50.), 3026)" -> "node((3033, 3034, 4, -0.0151996, 0.04253308, 46, 46.), 3032)" [label="IN_BYTES > -0.02" len=1.0]
+	"node((-1, -1, -2, -2., 0., 44, 44.), 3033)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 44, 44.), 3033)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 44, 44.), 3033)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 44, 44.), 3033)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 44, 44.), 3033)" [label="***Reconnaissance Leaf***
+feature = TCP_FLAGS
+threshold = -2.0
+impurity = 0.0
+samples = 44
+class_Name = Reconnaissance" fillcolor="#40e0d0" shape=ellipse style=filled]
+	"node((3033, 3034, 4, -0.0151996, 0.04253308, 46, 46.), 3032)" -> "node((-1, -1, -2, -2., 0., 44, 44.), 3033)" [label="TCP_FLAGS > -2.0" len=1.0]
+}

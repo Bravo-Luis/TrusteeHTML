@@ -1,0 +1,50 @@
+strict digraph subtree {
+	information0 [label="The average impurity change is 5.44%.
+Target class is Brute Force.
+The height of the Target leaf is 20.
+The Threshold type is avg imp change.
+" shape=box]
+	"node((1004, 1009, 6, -0.01799102, 0.0928019, 41, 41.), 1003)" [label="feature = IN_PKTS
+threshold = -0.02
+impurity = 0.09
+samples = 41
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((1005, 1008, 9, -1.20214885, 0.04875, 40, 40.), 1004)" [label="feature = FLOW_DURATION_MILLISECONDS
+threshold = -1.2
+impurity = 0.05
+samples = 40
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((1004, 1009, 6, -0.01799102, 0.0928019, 41, 41.), 1003)" -> "node((1005, 1008, 9, -1.20214885, 0.04875, 40, 40.), 1004)" [label="FLOW_DURATION_MILLISECONDS <= -1.2" len=1.0]
+	"node((-1, -1, -2, -2., 0., 37, 37.), 1008)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 37, 37.), 1008)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 37, 37.), 1008)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 37, 37.), 1008)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 37, 37.), 1008)" [label="***Brute Force Leaf***
+feature = TCP_FLAGS
+threshold = -2.0
+impurity = 0.0
+samples = 37
+class_Name = Brute Force" fillcolor="#40e0d0" shape=ellipse style=filled]
+	"node((1005, 1008, 9, -1.20214885, 0.04875, 40, 40.), 1004)" -> "node((-1, -1, -2, -2., 0., 37, 37.), 1008)" [label="TCP_FLAGS > -2.0" len=1.0]
+	information1 [label="The average impurity change is 5.46%.
+Target class is Brute Force.
+The height of the Target leaf is 19.
+The Threshold type is avg imp change.
+" shape=box]
+	"node((221, 234, 0, 34012., 0.22222222, 33, 33.), 220)" [label="feature = L4_SRC_PORT
+threshold = 34012.0
+impurity = 0.22
+samples = 33
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((-1, -1, -2, -2., 0., 18, 18.), 234)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 18, 18.), 234)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 18, 18.), 234)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 18, 18.), 234)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 18, 18.), 234)" [label="***Brute Force Leaf***
+feature = TCP_FLAGS
+threshold = -2.0
+impurity = 0.0
+samples = 18
+class_Name = Brute Force" fillcolor="#40e0d0" shape=ellipse style=filled]
+	"node((221, 234, 0, 34012., 0.22222222, 33, 33.), 220)" -> "node((-1, -1, -2, -2., 0., 18, 18.), 234)" [label="TCP_FLAGS > -2.0" len=1.0]
+}

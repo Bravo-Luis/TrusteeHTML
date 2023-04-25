@@ -1,0 +1,56 @@
+strict digraph subtree {
+	information0 [label="The average impurity change is 23.67%.
+Target class is injection.
+The height of the Target leaf is 7.
+The Threshold type is avg imp change.
+" shape=box]
+	"node((2927, 2940, 0, 58104., 0.20867543, 425, 425.), 2926)" [label="feature = L4_SRC_PORT
+threshold = 58104.0
+impurity = 0.21
+samples = 425
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((2941, 2948, 0, 58837., 0.44259272, 121, 121.), 2940)" [label="feature = L4_SRC_PORT
+threshold = 58837.0
+impurity = 0.44
+samples = 121
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((2927, 2940, 0, 58104., 0.20867543, 425, 425.), 2926)" -> "node((2941, 2948, 0, 58837., 0.44259272, 121, 121.), 2940)" [label="L4_SRC_PORT > 58837.0" len=1.0]
+	"node((2942, 2947, 0, 58688., 0.2268431, 46, 46.), 2941)" [label="feature = L4_SRC_PORT
+threshold = 58688.0
+impurity = 0.23
+samples = 46
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((2941, 2948, 0, 58837., 0.44259272, 121, 121.), 2940)" -> "node((2942, 2947, 0, 58688., 0.2268431, 46, 46.), 2941)" [label="L4_SRC_PORT <= 58688.0" len=1.0]
+	"node((-1, -1, -2, -2., 0., 28, 28.), 2947)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 28, 28.), 2947)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 28, 28.), 2947)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 28, 28.), 2947)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 28, 28.), 2947)" [label="***injection Leaf***
+feature = TCP_FLAGS
+threshold = -2.0
+impurity = 0.0
+samples = 28
+class_Name = injection" fillcolor="#40e0d0" shape=ellipse style=filled]
+	"node((2942, 2947, 0, 58688., 0.2268431, 46, 46.), 2941)" -> "node((-1, -1, -2, -2., 0., 28, 28.), 2947)" [label="TCP_FLAGS > -2.0" len=1.0]
+	information1 [label="The average impurity change is 6.84%.
+Target class is injection.
+The height of the Target leaf is 16.
+The Threshold type is avg imp change.
+" shape=box]
+	"node((3366, 3367, 0, 53222.5, 0.0831758, 23, 23.), 3365)" [label="feature = L4_SRC_PORT
+threshold = 53222.5
+impurity = 0.08
+samples = 23
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((-1, -1, -2, -2., 0., 22, 22.), 3366)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 22, 22.), 3366)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 22, 22.), 3366)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 22, 22.), 3366)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 22, 22.), 3366)" [label="***injection Leaf***
+feature = TCP_FLAGS
+threshold = -2.0
+impurity = 0.0
+samples = 22
+class_Name = injection" fillcolor="#40e0d0" shape=ellipse style=filled]
+	"node((3366, 3367, 0, 53222.5, 0.0831758, 23, 23.), 3365)" -> "node((-1, -1, -2, -2., 0., 22, 22.), 3366)" [label="TCP_FLAGS > -2.0" len=1.0]
+}

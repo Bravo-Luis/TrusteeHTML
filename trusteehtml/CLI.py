@@ -29,7 +29,7 @@ class CLIController:
         self.thresholder = Thresholder(trust_report)
         self.output_directory = output_directory
         self.html_creator = htmlCreator(trust_report, output_directory)
-        self.explanation_path = ""
+        self.explanation_path = "" 
         
     def run(self):
         """
@@ -44,18 +44,13 @@ class CLIController:
                 if command[0] in ['quit', 'q']:
                     break
                 elif command[0] == "open":
-                    if self.explanation_path == "":
-                        # create the html file and open it in the web browser
-                        filename = 'file:///'+os.getcwd() +"/" +self.output_directory + "/output.html"
-                        self.html_creator.convert_to_html()
-                        print("building html file...")
-                        print(f"opening {filename} in web browser... \n")
-                        webbrowser.open_new_tab(filename)
-                        self.explanation_path = filename
-                    else:
-                        # open the previously created html file in the web browser
-                        print("opening trust report... \n")
-                        webbrowser.open_new_tab(self.explanation_path)
+                    # create the html file and open it in the web browser
+                    filename = 'file:///'+os.getcwd() +"/" +self.output_directory + "/output.html"
+                    self.html_creator.convert_to_html()
+                    print("building html file...")
+                    print(f"opening {filename} in web browser... \n")
+                    webbrowser.open_new_tab(filename)
+                    self.explanation_path = filename
                 elif command[0] == "help":
                     print(self.guide)
                 elif command[0] == "chatGPT":
@@ -71,12 +66,12 @@ class CLIController:
                     
             # Thresholding
             elif len(command) == 2 and command[0] == "qi" and command[1].isdigit():
-                get_subtree(self.thresholder.trust_report.max_dt, int(command[1]) ,self.thresholder.trust_report.class_names, self.thresholder.trust_report.feature_names).render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}")
+                get_subtree(self.thresholder.trust_report.max_dt, int(command[1]) ,self.thresholder.trust_report.class_names, self.thresholder.trust_report.feature_names).render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}_lab56", format="png")
             elif len(command) == 2 and command[0] == "aic" and command[1].isdigit():
-                get_subtree(self.thresholder.trust_report.max_dt, int(command[1]) ,self.thresholder.trust_report.class_names, self.thresholder.trust_report.feature_names, threshold="avg imp change").render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}")
+                get_subtree(self.thresholder.trust_report.max_dt, int(command[1]) ,self.thresholder.trust_report.class_names, self.thresholder.trust_report.feature_names, threshold="avg imp change").render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}_lab56", format="png")
             elif len(command) == 3 and command[0] == "cus" and command[1].isdigit() and command[2].isdigit():
-                get_subtree(self.thresholder.trust_report.max_dt, int(command[1]) ,self.thresholder.trust_report.class_names, self.thresholder.trust_report.feature_names, threshold="custom", custom_threshold=int(command[2])).render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}")
+                get_subtree(self.thresholder.trust_report.max_dt, int(command[1]) ,self.thresholder.trust_report.class_names, self.thresholder.trust_report.feature_names, threshold="custom", custom_threshold=int(command[2])).render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}_{command[2]}_lab56", format="png")
             elif len(command) == 2 and command[0] == "full" and command[1].isdigit():
-                get_subtree(self.thresholder.trust_report.max_dt, int(command[1]) ,self.thresholder.trust_report.class_names, self.thresholder.trust_report.feature_names, full_tree=True).render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}")
+                get_subtree(self.thresholder.trust_report.max_dt, int(command[1]) ,self.thresholder.trust_report.class_names, self.thresholder.trust_report.feature_names, full_tree=True).render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}_lab56", format="png")
                     
                 

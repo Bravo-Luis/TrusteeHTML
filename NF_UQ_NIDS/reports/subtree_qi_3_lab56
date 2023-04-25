@@ -1,0 +1,42 @@
+strict digraph subtree {
+	information0 [label="Target class is DoS.
+The height of the Target leaf is 3.
+The Threshold type is quart impurity.
+" shape=box]
+	"node((3509, 3528, 8, 140., 0.23976192, 565, 565.), 3508)" [label="feature = TCP_FLAGS
+threshold = 140.0
+impurity = 0.24
+samples = 565
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((-1, -1, -2, -2., 0., 491, 491.), 3528)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 491, 491.), 3528)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 491, 491.), 3528)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 491, 491.), 3528)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 491, 491.), 3528)" [label="***DoS Leaf***
+feature = TCP_FLAGS
+threshold = -2.0
+impurity = 0.0
+samples = 491
+class_Name = DoS" fillcolor="#40e0d0" shape=ellipse style=filled]
+	"node((3509, 3528, 8, 140., 0.23976192, 565, 565.), 3508)" -> "node((-1, -1, -2, -2., 0., 491, 491.), 3528)" [label="TCP_FLAGS > -2.0" len=1.0]
+	information1 [label="Target class is DoS.
+The height of the Target leaf is 10.
+The Threshold type is quart impurity.
+" shape=box]
+	"node((3503, 3504, 4, -0.02579412, 0.56, 5, 5.), 3502)" [label="feature = IN_BYTES
+threshold = -0.03
+impurity = 0.56
+samples = 5
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((-1, -1, -2, -2., 0., 3, 3.), 3503)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 3, 3.), 3503)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 3, 3.), 3503)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 3, 3.), 3503)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 3, 3.), 3503)" [label="***DoS Leaf***
+feature = TCP_FLAGS
+threshold = -2.0
+impurity = 0.0
+samples = 3
+class_Name = DoS" fillcolor="#40e0d0" shape=ellipse style=filled]
+	"node((3503, 3504, 4, -0.02579412, 0.56, 5, 5.), 3502)" -> "node((-1, -1, -2, -2., 0., 3, 3.), 3503)" [label="TCP_FLAGS <= -2.0" len=1.0]
+}

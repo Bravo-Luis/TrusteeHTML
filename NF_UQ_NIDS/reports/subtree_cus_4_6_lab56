@@ -1,0 +1,102 @@
+strict digraph subtree {
+	information0 [label="Target class is Generic.
+The height of the Target leaf is 7.
+The Threshold type is custom.
+" shape=box]
+	"node((1, 3508, 3, 131.34999847, 0.9523117, 10804, 10804.), 0)" [label="feature = L7_PROTO
+threshold = 131.35
+impurity = 0.95
+samples = 10804
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((2, 2925, 9, -0.94604245, 0.94995361, 10239, 10239.), 1)" [label="feature = FLOW_DURATION_MILLISECONDS
+threshold = -0.95
+impurity = 0.95
+samples = 10239
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((1, 3508, 3, 131.34999847, 0.9523117, 10804, 10804.), 0)" -> "node((2, 2925, 9, -0.94604245, 0.94995361, 10239, 10239.), 1)" [label="FLOW_DURATION_MILLISECONDS <= -0.95" len=1.0]
+	"node((3, 174, 1, 22.5, 0.9406806, 8363, 8363.), 2)" [label="feature = L4_DST_PORT
+threshold = 22.5
+impurity = 0.94
+samples = 8363
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((2, 2925, 9, -0.94604245, 0.94995361, 10239, 10239.), 1)" -> "node((3, 174, 1, 22.5, 0.9406806, 8363, 8363.), 2)" [label="L4_DST_PORT <= 22.5" len=1.0]
+	"node((4, 91, 0, 31885., 0.57380973, 913, 913.), 3)" [label="feature = L4_SRC_PORT
+threshold = 31885.0
+impurity = 0.57
+samples = 913
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((3, 174, 1, 22.5, 0.9406806, 8363, 8363.), 2)" -> "node((4, 91, 0, 31885., 0.57380973, 913, 913.), 3)" [label="L4_SRC_PORT <= 31885.0" len=1.0]
+	"node((92, 155, 3, 0.5, 0.19024418, 590, 590.), 91)" [label="feature = L7_PROTO
+threshold = 0.5
+impurity = 0.19
+samples = 590
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((4, 91, 0, 31885., 0.57380973, 913, 913.), 3)" -> "node((92, 155, 3, 0.5, 0.19024418, 590, 590.), 91)" [label="L7_PROTO > 0.5" len=1.0]
+	"node((93, 154, 4, -0.01879769, 0.08288913, 554, 554.), 92)" [label="feature = IN_BYTES
+threshold = -0.02
+impurity = 0.08
+samples = 554
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((92, 155, 3, 0.5, 0.19024418, 590, 590.), 91)" -> "node((93, 154, 4, -0.01879769, 0.08288913, 554, 554.), 92)" [label="IN_BYTES <= -0.02" len=1.0]
+	"node((-1, -1, -2, -2., 0., 443, 443.), 154)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 443, 443.), 154)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 443, 443.), 154)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 443, 443.), 154)" -> information0 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 443, 443.), 154)" [label="***Generic Leaf***
+feature = TCP_FLAGS
+threshold = -2.0
+impurity = 0.0
+samples = 443
+class_Name = Generic" fillcolor="#40e0d0" shape=ellipse style=filled]
+	"node((93, 154, 4, -0.01879769, 0.08288913, 554, 554.), 92)" -> "node((-1, -1, -2, -2., 0., 443, 443.), 154)" [label="TCP_FLAGS > -2.0" len=1.0]
+	information1 [label="Target class is Generic.
+The height of the Target leaf is 11.
+The Threshold type is custom.
+" shape=box]
+	"node((92, 155, 3, 0.5, 0.19024418, 590, 590.), 91)" [label="feature = L7_PROTO
+threshold = 0.5
+impurity = 0.19
+samples = 590
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((93, 154, 4, -0.01879769, 0.08288913, 554, 554.), 92)" [label="feature = IN_BYTES
+threshold = -0.02
+impurity = 0.08
+samples = 554
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((92, 155, 3, 0.5, 0.19024418, 590, 590.), 91)" -> "node((93, 154, 4, -0.01879769, 0.08288913, 554, 554.), 92)" [label="IN_BYTES <= -0.02" len=1.0]
+	"node((94, 121, 0, 42422., 0.33893353, 111, 111.), 93)" [label="feature = L4_SRC_PORT
+threshold = 42422.0
+impurity = 0.34
+samples = 111
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((93, 154, 4, -0.01879769, 0.08288913, 554, 554.), 92)" -> "node((94, 121, 0, 42422., 0.33893353, 111, 111.), 93)" [label="L4_SRC_PORT <= 42422.0" len=1.0]
+	"node((122, 147, 0, 57317., 0.25765102, 79, 79.), 121)" [label="feature = L4_SRC_PORT
+threshold = 57317.0
+impurity = 0.26
+samples = 79
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((94, 121, 0, 42422., 0.33893353, 111, 111.), 93)" -> "node((122, 147, 0, 57317., 0.25765102, 79, 79.), 121)" [label="L4_SRC_PORT > 57317.0" len=1.0]
+	"node((123, 130, 0, 46438., 0.22138465, 71, 71.), 122)" [label="feature = L4_SRC_PORT
+threshold = 46438.0
+impurity = 0.22
+samples = 71
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((122, 147, 0, 57317., 0.25765102, 79, 79.), 121)" -> "node((123, 130, 0, 46438., 0.22138465, 71, 71.), 122)" [label="L4_SRC_PORT <= 46438.0" len=1.0]
+	"node((131, 146, 0, 54085., 0.14993753, 49, 49.), 130)" [label="feature = L4_SRC_PORT
+threshold = 54085.0
+impurity = 0.15
+samples = 49
+" fillcolor="#ff000042" shape=ellipse style=filled]
+	"node((123, 130, 0, 46438., 0.22138465, 71, 71.), 122)" -> "node((131, 146, 0, 54085., 0.14993753, 49, 49.), 130)" [label="L4_SRC_PORT > 54085.0" len=1.0]
+	"node((-1, -1, -2, -2., 0., 15, 15.), 146)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 15, 15.), 146)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 15, 15.), 146)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 15, 15.), 146)" -> information1 [len=0.8]
+	"node((-1, -1, -2, -2., 0., 15, 15.), 146)" [label="***Generic Leaf***
+feature = TCP_FLAGS
+threshold = -2.0
+impurity = 0.0
+samples = 15
+class_Name = Generic" fillcolor="#40e0d0" shape=ellipse style=filled]
+	"node((131, 146, 0, 54085., 0.14993753, 49, 49.), 130)" -> "node((-1, -1, -2, -2., 0., 15, 15.), 146)" [label="TCP_FLAGS > -2.0" len=1.0]
+}
