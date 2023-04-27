@@ -752,7 +752,7 @@ class htmlCreator:
                 </a>
             """
             out = ""
-            dir = f"./{self.output_directory}/reports/*.png"
+            dir = f"./{self.output_directory}/reports/*.pdf"
             pdfFiles = []
             for file in glob.glob(dir):
                 if file[-9:-4] == "lab56":
@@ -762,11 +762,13 @@ class htmlCreator:
                 print("No Threshold")
                 return {"Thresholds" : out}
             
+            pdfFiles.sort()
+            
             for file in pdfFiles:
                 temp = Template(htmlTemp)
                 index = file.rfind("subtree")
                 values = file[index:]
-                values = values.replace("_lab56.png", "")
+                values = values.replace("_lab56.pdf", "")
                 values = values.replace("_"," ")
                 values = values.split()
                 if len(values) == 3:
@@ -774,11 +776,14 @@ class htmlCreator:
                         out += temp.render(threshold_values=f"Quart Impurity: {self.trust_report.class_names[int(values[2])]}", img_src=file[file.rfind("reports"):])
                     elif values[1] == "aic":
                         out += temp.render(threshold_values=f"Avg Impurity Change: {self.trust_report.class_names[int(values[2])]}", img_src=file[file.rfind("reports"):])
-                    elif values[1] == "full":
-                        out += temp.render(threshold_values=f"Full: {self.trust_report.class_names[int(values[2])]}", img_src=file[file.rfind("reports"):])
                 elif len(values) == 4:
                     if values[1] == "cus":
-                        out += temp.render(threshold_values=f"Custom: {self.trust_report.class_names[int(values[2])]}, limit:{values[2]}", img_src=file[file.rfind("reports"):])
+                        out += temp.render(threshold_values=f"Custom: {self.trust_report.class_names[int(values[2])]}, limit:{values[3]}", img_src=file[file.rfind("reports"):])
+                    elif values[1] == "full":
+                        if values[2] == "qi":
+                            out += temp.render(threshold_values=f"Full Quart Impurity: {self.trust_report.class_names[int(values[3])]}", img_src=file[file.rfind("reports"):])
+                        if values[2] == "aic":
+                            out += temp.render(threshold_values=f"Full Avg. Impurity Change: {self.trust_report.class_names[int(values[3])]}", img_src=file[file.rfind("reports"):])
             return {"Thresholds" : header + out}
             
             
@@ -792,6 +797,8 @@ class htmlCreator:
                 template = Template(file.read())
             
             self.trust_report._save_dts(f"{self.output_directory}/reports", False)
+            
+            
             
             trust_report_information_dict = self.trust_report_summary(self.trust_report) | self.summary_performance(self.trust_report)| self.TopKIterationBody()|self.CCPAlphaBody()| self.MaxDepthBody()|self.MaxLeavesBody()|self.IterativeFeatureRemovalBody() |self.Thresholds()|{"decision_tree" : os.getcwd() + "/" + self.output_directory + "/reports/trust_report_dt.pdf", "pruned_decision_tree" : os.getcwd() + "/" + self.output_directory +"/reports/trust_report_pruned_dt.pdf"}
             trust_report_information_dict = trust_report_information_dict | self.single_run_report()
