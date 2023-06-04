@@ -10,7 +10,7 @@ These package improvements:
 
 how to use: Iris example
 
-'''
+''' python
 from sklearn import datasets
 from sklearn.ensemble import RandomForestClassifier
 from trustee.report.trust import TrustReport
@@ -58,7 +58,7 @@ with this way you are able to use command line commands to create subtrees
 
 
 Iris example 2:
-'''
+''' python
 from sklearn import datasets
 from sklearn.ensemble import RandomForestClassifier
 from trustee.report.trust import TrustReport
