@@ -974,7 +974,7 @@ class TrusteeFormatter:
                 </div>
                 
                 <div id="thresholds" style="display:none; flex-none: wrap;" class="content">
-                <div style="display:flex;>
+                <div style="display:flex;">
                 {get_thresholds()}
                 </div>
                 </div>
