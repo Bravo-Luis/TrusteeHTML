@@ -742,7 +742,7 @@ class TrusteeFormatter:
         
         """
     
-    
+        openai.api_key = 'API KEY'
         
         def chatGPTNodes():
             data = ""
@@ -754,7 +754,7 @@ class TrusteeFormatter:
             for i in cnames:
                 data = data.replace(i,str(cnames.index(i)))
             
-            openai.api_key = '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'
+         
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                         messages=[
@@ -781,7 +781,7 @@ class TrusteeFormatter:
         def chatGPTFeatures():
             data = trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_features)}_features"]
             data = str(data)
-            openai.api_key = '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'
+          
             response = openai.ChatCompletion.create( 
                 model="gpt-3.5-turbo",
                         messages=[
@@ -811,7 +811,7 @@ class TrusteeFormatter:
             for val in trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_branches)}_branches"]:
                 data += f"""[{val}, {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_branches)}_branches"][val]["decision(P(x))"]}, {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_branches)}_branches"][val]["sample(%)"]}, {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_branches)}_branches"][val]["class_samples"]}]"""
             
-            openai.api_key = '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'
+         
             response = openai.ChatCompletion.create( 
                 model="gpt-3.5-turbo",
                         messages=[
@@ -841,7 +841,6 @@ class TrusteeFormatter:
             data2 = str(data2)
             
            
-            openai.api_key = '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'
             response = openai.ChatCompletion.create( 
                 model="gpt-3.5-turbo",
                         messages=[
@@ -868,7 +867,7 @@ class TrusteeFormatter:
             for val in trust_report_json["repeated_run_analysis"]['iterative_feature_removal']:
                 data += f"""{trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]["feature_removed"]}, {trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]['n_features_removed']}, black box performance : {trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]['performance_score']["accuracy"]}, {trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]['dt_size']}, explanation fidelity : {trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]['fidelity_score']["accuracy"]}"""
            
-            openai.api_key = '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'
+          
             response = openai.ChatCompletion.create( 
                 model="gpt-3.5-turbo",
                         messages=[
