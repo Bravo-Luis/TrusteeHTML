@@ -973,8 +973,10 @@ class TrusteeFormatter:
                 {report} 
                 </div>
                 
-                <div id="thresholds" style="display:flex; flex-wrap: wrap;" class="content">
+                <div id="thresholds" style="display:none; flex-none: wrap;" class="content">
+                <div style="display:flex;>
                 {get_thresholds()}
+                </div>
                 </div>
                 
                 <div id="gptReport" style="display:none" class="content">
