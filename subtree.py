@@ -1,5 +1,3 @@
-#Created by Abelatnafu
-
 import numpy as np
 from trustee.utils.tree import get_dt_dict
 import graphviz as giz
@@ -25,6 +23,7 @@ def get_subtree(dt, target_class, class_labels, features, threshold = "quart imp
     :param k : number of max subtree
     :return: N/A
     """
+    
     # Threshold types = ["quart impurity", "custom", "avg imp change", "full tree"]
     # change tree to dict
     dict_dt = get_dt_dict(dt)
