@@ -1,7 +1,11 @@
 import webbrowser
 import os
+import time
 from trustee.report.subtree import get_subtree
 from trustee.report.format import TrusteeFormatter
+import openai
+import traceback
+
 
 class TrusteeThreshold:
     def __init__(self, trust_report, output_directory) -> None:
@@ -35,26 +39,28 @@ class TrusteeThreshold:
                     break
                 
                 elif command[0] == "open":
-                    
-                    filename = 'file:///' + os.getcwd() + '/' + self.output_directory + 'trust_report.html'
+                    start_time = time.time()
+                    filename = 'file:///' + os.getcwd() + '/' + self.output_directory + '/trust_report.html'
                     try: 
                         print("building json file...")
                         self.formatter.json()
                         print("building html file...")
                         self.formatter.html()
                         print("done.")
-                    except:
-                        print("error building html file")
+                    except Exception as e:
+                        print("Error building html file:", str(e))
+                        traceback.print_exc()
                     try:
                         print(f"opening {filename} in web browser... \n")
                         webbrowser.open_new_tab(filename)
                         print("done.")
-                    except:
-                        print("error opening html file.")
+                        print("time === ",(time.time() - start_time))
+                    except Exception as e:
+                        print("Error opening html file:", str(e))
+                        traceback.print_exc()
             
                 elif command[0] == "help":
                     print(self.guide)      
-                    
             #elif len(command) == 2 and command[0] == 'target':
                 #if command[1].isdigit():
                     # find all paths to the target class with int given index
@@ -66,13 +72,17 @@ class TrusteeThreshold:
             # Thresholding
             elif len(command) == 2 and command[0] == "qi" and command[1].isdigit():
                 get_subtree(self.trust_report.max_dt, int(command[1]) ,self.trust_report.class_names, self.trust_report.feature_names).render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}_Trustee_Threshold", format="pdf")
+                get_subtree(self.trust_report.max_dt, int(command[1]) ,self.trust_report.class_names, self.trust_report.feature_names).render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}_Trustee_Threshold", format="png")
             elif len(command) == 2 and command[0] == "aic" and command[1].isdigit():
                 get_subtree(self.trust_report.max_dt, int(command[1]) ,self.trust_report.class_names, self.trust_report.feature_names, threshold="avg imp change").render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}_Trustee_Threshold", format="pdf")
+                get_subtree(self.trust_report.max_dt, int(command[1]) ,self.trust_report.class_names, self.trust_report.feature_names, threshold="avg imp change").render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}_Trustee_Threshold", format="png")
             elif len(command) == 3 and command[0] == "cus" and command[1].isdigit() and command[2].isdigit():
                 get_subtree(self.trust_report.max_dt, int(command[1]) ,self.trust_report.class_names, self.trust_report.feature_names, threshold="custom", custom_threshold=int(command[2])).render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}_{command[2]}_Trustee_Threshold", format="pdf")
+                get_subtree(self.trust_report.max_dt, int(command[1]) ,self.trust_report.class_names, self.trust_report.feature_names, threshold="custom", custom_threshold=int(command[2])).render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}_{command[2]}_Trustee_Threshold", format="png")
             elif len(command) == 3 and command[0] == "full" and command[2].isdigit():
                 if command[1] == "qi":
                     get_subtree(self.trust_report.max_dt, int(command[2]),self.trust_report.class_names, self.trust_report.feature_names,threshold="qi" ,full_tree=True).render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}_{command[2]}_Trustee_Threshold", format="pdf")
+                    get_subtree(self.trust_report.max_dt, int(command[2]),self.trust_report.class_names, self.trust_report.feature_names,threshold="qi" ,full_tree=True).render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}_{command[2]}_Trustee_Threshold", format="png")
                 elif command[1] == "aic":
                     get_subtree(self.trust_report.max_dt, int(command[2]),self.trust_report.class_names, self.trust_report.feature_names,threshold="aic" ,full_tree=True).render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}_{command[2]}_Trustee_Threshold", format="pdf")
-                
+                    get_subtree(self.trust_report.max_dt, int(command[2]),self.trust_report.class_names, self.trust_report.feature_names,threshold="aic" ,full_tree=True).render(filename=os.getcwd() +"/" +self.output_directory + f"/reports/subtree_{command[0]}_{command[1]}_{command[2]}_Trustee_Threshold", format="png")
