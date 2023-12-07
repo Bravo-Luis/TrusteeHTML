@@ -10,7 +10,7 @@ These package improvements:
 
 how to use: Iris example
 
-''' python
+```python
 from sklearn import datasets
 from sklearn.ensemble import RandomForestClassifier
 from trustee.report.trust import TrustReport
@@ -52,13 +52,13 @@ except:
 
 test = TrusteeThreshold(data, dir)
 test.run()
-'''
+```
 
 with this way you are able to use command line commands to create subtrees
 
 
 Iris example 2:
-''' python
+``` python
 from sklearn import datasets
 from sklearn.ensemble import RandomForestClassifier
 from trustee.report.trust import TrustReport
@@ -100,5 +100,5 @@ except:
 test = TrusteeFormatter(trust_report=trust_report, output_dir=dir)
 test.json()
 test.html()
-'''
+```
 This one just creates the json and html code
