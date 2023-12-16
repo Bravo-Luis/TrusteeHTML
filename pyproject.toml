@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "trustee"
+version = "1.1.5"
+readme = "README.md"
+description = "This package implements the Trustee framework to extract decision tree explanation from black-box ML models."
+homepage = "https://trusteeml.github.io"
+repository = "https://github.com/TrusteeML/trustee"
+authors = ["Arthur Selle Jacobs <asjacobs@inf.ufrgs.br>"]
+packages = [ { include = "trustee"} ]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.7"
+numpy = ">=1.19.0"
+scipy = "^1.4.1"
+pandas = "^1.1.0"
+scikit-learn = ">=0.23.2"
+matplotlib = "^3.3.1"
+setuptools = "^57.0.0"
+prettytable = "3.0.0"
+termcolor = "^1.1.0"
+graphviz = ">=0.8.1"
+furo = "^2022.6.21"
+sphinxemoji = "^0.2.0"
+sphinx-gallery = "^0.11.1"
+
+[tool.poetry.dev-dependencies]
+Sphinx = "^5.1.1"
+
+[tool.black]
+line-length = 120
+
+[build-system]
+requires = ["poetry>=0.12", "setuptools>=^57.0.0"]
+build-backend = "poetry.masonry.api"
