@@ -6,6 +6,7 @@ from trustee.report.trust import TrustReport
 import openai
 import concurrent.futures
 import graphviz
+import markdown
 
 
 class TrusteeFormatter:
@@ -298,15 +299,21 @@ class TrusteeFormatter:
             """
             
             for _class_ in score_report['class_performance']:
+                class_index = int(_class_) - 1  
+                if 0 <= class_index < len(self.trust_report.class_names):
+                    class_name = self.trust_report.class_names[class_index]
+                else:
+                    class_name = "Unknown"
+
                 temp_html += f"""
                     <tr>
-                        <th style="text-align:left;"> {_class_}. {self.trust_report.class_names[int(_class_)]} </th>
+                        <th style="text-align:left;"> {_class_}. {class_name} </th>
                         <td> {score_report['class_performance'][_class_]['precision']} </td>
                         <td> {score_report['class_performance'][_class_]['recall']} </td>
                         <td> {score_report['class_performance'][_class_]['f1_score']} </td>
                         <td> {score_report['class_performance'][_class_]['support']} </td>
                     </tr>
-                """ 
+                """
             
             output_html = f"""
                 <table>
@@ -741,68 +748,31 @@ class TrusteeFormatter:
                 </table>
         
         """
-    
-        openai.api_key = 'API KEY'
+        import dotenv 
+        dotenv.load_dotenv()
+        if "OPENAI_API_KEY" in os.environ:
+            openai.api_key = os.environ["OPENAI_API_KEY"]
+        else:
+            # Ask the user to input the API key if it's not found in the environment variables
+            openai.api_key = input("Enter your OpenAI API key: ")
+
         
         def chatGPTNodes():
             data = ""
             for val in trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_nodes)}_nodes"]:
                 data += f"""[{val}, {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_nodes)}_nodes"][val]['gini_split']},  {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_nodes)}_nodes"][val]['data_split']}, {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_nodes)}_nodes"][val]['data_split_by_class(L/R)']}]""".replace('Right', 'R').replace('Left', 'L')
-            
+    
             cnames = self.trust_report.class_names
             
             for i in cnames:
                 data = data.replace(i,str(cnames.index(i)))
             
-         
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                        messages=[
-                            {
-                                "role": "system", 
-                                "content": (
-                                    f"""As a network security expert, you are provided with top k nodes of a decision tree model 
-                                    used for classifying network traffic. Each node detail includes its decision rule, Gini split, 
-                                    data split, and data split by class. Based on these details, you are tasked with identifying 
-                                    instances of shortcut learning, overfitting, or spurious correlations in the model's decisions. 
-                                    Moreover, you are required to assess the model's potential to generalize to out-of-distribution data.
-                                    Here are the list of feature names, refer using the names to help understandability {cnames}"""
-                                )
-                            },
-                            {
-                                "role": "user", 
-                                "content": f"{data}"
-                            },
-                        ]
-                    )
-            
-            return response['choices'][0]['message']['content']
+            return data
         
         def chatGPTFeatures():
             data = trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_features)}_features"]
             data = str(data)
-          
-            response = openai.ChatCompletion.create( 
-                model="gpt-3.5-turbo",
-                        messages=[
-                            {
-                                "role": "system", 
-                                "content": (
-                                    f""" In your role as a network security expert, you are given the top k 
-                                    features used by a black box model that classifies network traffic. These 
-                                    feature details include the number and percentage of each feature in the data, 
-                                    as well as the data split by feature. Use this information to identify potential 
-                                    instances of shortcut learning, overfitting, or spurious correlations in the model's 
-                                    decisions. Additionally, assess the model's ability to generalize to unseen or out-of-distribution data."""
-                                )
-                            },
-                            {
-                                "role": "user", 
-                                "content": f"{data}"
-                            },
-                        ]
-                    )
-            return response['choices'][0]['message']['content']
+            return data
         
         def chatGPTBranches():
             data = ""
@@ -810,57 +780,74 @@ class TrusteeFormatter:
             
             for val in trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_branches)}_branches"]:
                 data += f"""[{val}, {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_branches)}_branches"][val]["decision(P(x))"]}, {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_branches)}_branches"][val]["sample(%)"]}, {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_branches)}_branches"][val]["class_samples"]}]"""
-            
-         
-            response = openai.ChatCompletion.create( 
-                model="gpt-3.5-turbo",
-                        messages=[
-                            {
-                                "role": "system", 
-                                "content": (
-                                    f""" As a network security expert analyzing a black box model for classifying network 
-                                    traffic, you have access to details about the top k branches used by the model. This 
-                                    information includes decision rules, the number, and percentage of each feature in the 
-                                    data, as well as the data split by feature. Your task is to identify potential signs of
-                                    shortcut learning, overfitting, or spurious correlations in the model's decisions. 
-                                    Furthermore, evaluate the model's capacity to generalize to out-of-distribution data"""
-                                )
-                            },
-                            {
-                                "role": "user", 
-                                "content": f"{data}"
-                            },
-                        ]
-                    )
-            return response['choices'][0]['message']['content']
+
+            return data
         
         def chatGPTSummary():
-            data = trust_report_json["summary"]["black_box"]
-            data2 = trust_report_json["summary"]["max_tree"]
-            data = str(data)
-            data2 = str(data2)
-            
-           
-            response = openai.ChatCompletion.create( 
-                model="gpt-3.5-turbo",
-                        messages=[
-                            {
-                                "role": "system", 
-                                "content": (
-                                    f"""You are tasked as a network security expert to compare the performance metrics 
-                                    of a black box model and a decision tree model used for network traffic classification. 
-                                    Your task includes identifying potential shortcut learning, overfitting, or reliance on 
-                                    spurious correlations in the models. Moreover, you need to provide recommendations on how 
-                                    the models can be improved to better handle out-of-distribution data."""
-                                )
-                            },
-                            {
-                                "role": "user", 
-                                "content": f"here is the black box data {data} and here is the decision tree data {data2}"
-                            },
-                        ]
-                    )
-            return response['choices'][0]['message']['content']
+            try:
+                    # Extracting data from the trust report JSON file
+                blackboxModelDetails = str(trust_report_json["summary"]["black_box"])
+                maxTreeDetails = str(trust_report_json["summary"]["max_tree"])
+                
+                # Reading data from report files
+                with open(self.output_dir + "reports/trust_report_dt", "r") as f:
+                    maxTreeData = f.read()
+                            
+                with open(self.output_dir +"reports/trust_report_pruned_dt", "r") as f:
+                    prunedTreeData = f.read()
+                
+                # Collecting additional data for analysis
+                topKNodes = str(chatGPTNodes())
+                topKFeatures = str(chatGPTFeatures())
+                topKBranches = str(chatGPTBranches())
+                repeatedRunAnalysis = str(chatGPTRRA())
+                
+                response = openai.ChatCompletion.create(
+    model="gpt-4-1106-preview",
+    messages=[
+        {
+            "role": "system",
+            "content": (
+                """
+                As an AI assistant, your task is to analyze the outputs of TRUSTEE, a tool for enhancing the interpretability of complex black-box machine learning models. You'll assist in understanding the decision-making processes of these models and offer guidance for improvements based on TRUSTEE's findings. TRUSTEE is model-agnostic, provides global interpretability, extracts decision trees for easier understanding, ensures high fidelity and stability, and may produce a trust report to assess model trustworthiness. Focus on domains where decision-making transparency is crucial.
+                """
+            )
+        },
+        {
+            "role": "user",
+            "content": f"""
+            Here is the data for analysis:
+            - Blackbox Model Details: {blackboxModelDetails}
+            - Max Tree Details: {maxTreeDetails}
+            - Max Tree Data: {maxTreeData}
+            - Pruned Tree Data: {prunedTreeData}
+            - Top K Nodes: {topKNodes}
+            - Top K Features: {topKFeatures}
+            - Top K Branches: {topKBranches}
+            - Repeated Run Analysis: {repeatedRunAnalysis}
+            - Here are the class names respectively: {self.trust_report.class_names}
+
+            Please focus on the following areas for detailed analysis and recommendations:
+            - Specific features influencing model decisions and alternative feature engineering strategies.
+            - Contextual application of the model in the specific domain (healthcare, finance, etc.).
+            - Alternative modeling techniques and architectures addressing the identified issues.
+            - Recommendations on model validation strategies to ensure robustness.
+            - Data quality, cleaning, preprocessing, and augmentation strategies.
+            - Detailed exploration of hyperparameter optimization.
+            - Approaches to detect and mitigate potential biases in the model.
+            - Implementation of local interpretability tools to complement global interpretations.
+            - Suggestions on performance metrics beyond the F1 score.
+            - Practical steps for implementing the suggested model improvements.
+            """
+        },
+    ]
+)
+
+    
+                return markdown.markdown(response['choices'][0]['message']['content'])
+            except Exception as e:
+                print(e)
+                return "Chat GPT Summary failed"
         
         def chatGPTRRA():
             data = ""
@@ -868,52 +855,18 @@ class TrusteeFormatter:
                 data += f"""{trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]["feature_removed"]}, {trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]['n_features_removed']}, black box performance : {trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]['performance_score']["accuracy"]}, {trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]['dt_size']}, explanation fidelity : {trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]['fidelity_score']["accuracy"]}"""
            
           
-            response = openai.ChatCompletion.create( 
-                model="gpt-3.5-turbo",
-                        messages=[
-                            {
-                                "role": "system", 
-                                "content": (
-                                    f"""As part of a repeated run analysis, you iteratively remove different features from your model and 
-                                    track the changes in model performance, decision tree size, and explanation fidelity. Your aim is to 
-                                    uncover features that may not be necessary or may be negatively affecting your model's performance. 
-                                    Analyze patterns across iterations to identify features that, when removed, maximize the black box model's 
-                                    performance and subsequently increase explanation fidelity. Note that the initial accuracy of the black 
-                                    box model is {trust_report_json["summary"]["black_box"]["performance"]["accuracy"]} and the fidelity 
-                                    accuracy of the explanation {trust_report_json["summary"]["max_tree"]["fidelity"]["accuracy"]}. Your 
-                                    insights are needed to suggest beneficial feature removal if applicable.
-                                    """
-                                )
-                            },
-                            {
-                                "role": "user", 
-                                "content": f" Here is the data you will analyze: {data}"
-                            },
-                        ]
-                    )
-            return response['choices'][0]['message']['content']
+            
+            return data
         
-        chatGPTNodesText = ""
-        chatGPTFeaturesText = ""
-        chatGPTBranchesText = ""
-        chatGPTSummaryText = ""
-        chatGPTRRAText = ""
+
         
         try:
             with concurrent.futures.ThreadPoolExecutor() as executor:
-                future1 = executor.submit(chatGPTNodes)
-                future2 = executor.submit(chatGPTFeatures)
-                future3 = executor.submit(chatGPTBranches)
-                future4 = executor.submit(chatGPTSummary)
-                future5 = executor.submit(chatGPTRRA)
-
-                chatGPTNodesText = future1.result()
-                chatGPTFeaturesText = future2.result()
-                chatGPTBranchesText = future3.result()
-                chatGPTSummaryText = future4.result()
-                chatGPTRRAText = future5.result()
-        except:
-            print("chatGPT Error")
+                future1 = executor.submit(chatGPTSummary)
+                chatGPTSummaryText = future1.result()
+        except Exception as e:
+            print(e)
+            print("Chat GPT failed")
         
         html_template = f"""
         <!DOCTYPE html>
@@ -981,19 +934,7 @@ class TrusteeFormatter:
                 
                 <div id="gptReport" style="display:none" class="content">
                 <h1>Chat GPT Report</h1>
-                <h2> Summary </h2>
                 {chatGPTSummaryText} 
-                <br>
-                <h2> Top k Nodes </h2>
-                {chatGPTNodesText}
-                <br>
-                <h2> Top k Features </h2>
-                {chatGPTFeaturesText}
-                <br>
-                <h2> Top k Branches </h2>
-                {chatGPTBranchesText}
-                <h2> Repeated Run Analysis </h2>
-                {chatGPTRRAText}
                 </div>
             </body>
             
@@ -1014,7 +955,7 @@ class TrusteeFormatter:
         
 
             
-        output_file_path = self.output_dir + '/trust_report.html'
+        output_file_path = self.output_dir + 'trust_report.html'
         print(output_file_path)
         with open(output_file_path, 'w') as f:
             f.write(html_template)
