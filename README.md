@@ -1,5 +1,5 @@
 # TrusteeHTML
-Creates an HTML/JSON version of the trust report ouput of 
+Creates an HTML/JSON version of the trust report output of 
 <a href="https://github.com/TrusteeML/trustee"> Trustee <a/>
 
 ## TrusteeFormatter
