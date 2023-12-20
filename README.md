@@ -1,104 +1,60 @@
-Want to create a branch of trustee where we can put these files into trustee.report.trust 
+# TrusteeHTML
+Creates an HTML/JSON version of the trust report ouput of 
+<a href="https://github.com/TrusteeML/trustee"> Trustee <a/>
 
-These package improvements:
--  HTML Trust Report
--  JSON Trust Report
--  Adds cli commands to create subtrees 
--  Trees and subtrees displayed as PNG images and can be open/saved as pdf images
--  Uses OpenAI chatGPT API to try to analyze and suggest action based on data from explanation and trust report data
-
-
-how to use: Iris example
+## TrusteeFormatter
 
 ```python
-from sklearn import datasets
-from sklearn.ensemble import RandomForestClassifier
-from trustee.report.trust import TrustReport
-from trustee.report.threshold import TrusteeThreshold
-from trustee.report.format import TrusteeFormatter
+import pickle
 import os
+from trustee.report.format import TrusteeFormatter
 
-
-iris = datasets.load_iris()
-X, y = datasets.load_iris(return_X_y=True, as_frame=True)
-
-clf = RandomForestClassifier(n_estimators=100)
-
-data = TrustReport(
-    clf,
-    X=X,
-    y=y,
-    max_iter=5,
-    num_pruning_iter=5,
-    train_size=0.7,
-    trustee_num_iter=10,
-    trustee_num_stability_iter=5,
-    trustee_sample_size=0.3,
-    analyze_branches=True,
-    analyze_stability=True,
-    top_k=10,
-    verbose=True,
-    class_names=iris.target_names,
-    feature_names=iris.feature_names,
-    is_classify=True,
-)
-print(data)
-dir = 'iris/'
-
+# Pickled Trust Report
+with open('report.pickle', 'rb') as f:
+    report = pickle.load(f)
+    
+dir = 'test/'
 try:
        os.mkdir(dir)
 except: 
        pass
 
-test = TrusteeThreshold(data, dir)
-test.run()
-```
+# To Enhance ChatGPT Analysis   
+additional_info = """
 
-with this way you are able to use command line commands to create subtrees
+Model: Random Forest Classifier
+Hyperparameters: {'n_estimators': 20, 'max_depth': 4, 'max_features': 'sqrt'}
 
+These are values returned by the youtube api, the dataset was created from a packet trace while pausing and playing a youtube video (simulated by selenium web driver).
+class 1: Playing 
+class 2: Not Playing
+class 3: Buffering
 
-Iris example 2:
-``` python
-from sklearn import datasets
-from sklearn.ensemble import RandomForestClassifier
-from trustee.report.trust import TrustReport
-from trustee.report.threshold import TrusteeThreshold
-from trustee.report.format import TrusteeFormatter
-import os
+Features:
+ratio_time_since_last_DNS: 
+    Description: Ratio of time since last DNS request to the median time since last DNS request
+    Importance: 0.5209691063435197
+    
+rolling_median_time_since_last_DNS: 
+    Description: Rolling median of time since last DNS request
+    Importance: 0.4790308936564804
 
+"""
 
-iris = datasets.load_iris()
-X, y = datasets.load_iris(return_X_y=True, as_frame=True)
+test = TrusteeFormatter(trust_report=report, output_dir=dir, additional_info=additional_info)
 
-clf = RandomForestClassifier(n_estimators=100)
-
-trust_report = TrustReport(
-    clf,
-    X=X,
-    y=y,
-    max_iter=5,
-    num_pruning_iter=5,
-    train_size=0.7,
-    trustee_num_iter=10,
-    trustee_num_stability_iter=5,
-    trustee_sample_size=0.3,
-    analyze_branches=True,
-    analyze_stability=True,
-    top_k=10,
-    verbose=False,
-    class_names=iris.target_names,
-    feature_names=iris.feature_names,
-    is_classify=True,
-)
-dir = 'iris/'
-
-try:
-       os.mkdir(dir)
-except: 
-       pass
-
-test = TrusteeFormatter(trust_report=trust_report, output_dir=dir)
+# Creates JSON version of Trust Report
 test.json()
+
+# Creates HTML version of Trust Report (and optionally ChatGPT Analysis)
 test.html()
 ```
-This one just creates the json and html code
+
+### Here is an example output of the TrusteeFormatter html method
+
+https://github.com/Bravo-Luis/TrusteeHTML/assets/91937163/1f20fd12-896e-4300-9a81-0e2f1f444aba
+
+### Here is an example of the ChatGPT Analysis
+
+<img width="800" alt="Screenshot 2023-12-19 at 9 11 09 PM" src="https://github.com/Bravo-Luis/TrusteeHTML/assets/91937163/e5da3fd9-d966-481a-b1c9-2e5654ea4ccf">
+
