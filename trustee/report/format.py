@@ -7,15 +7,22 @@ import openai
 import concurrent.futures
 import graphviz
 import markdown
+import dotenv 
+
+dotenv.load_dotenv()
+if "OPENAI_API_KEY" in os.environ:
+    openai.api_key = os.environ["OPENAI_API_KEY"]
+else:
+    openai.api_key = input("Enter your OpenAI API key if you want the chatGPT analysis: ")
 
 
 class TrusteeFormatter:
-    
-    def __init__(self, trust_report : TrustReport, output_dir : str, all_dts=False) -> None:
+    def __init__(self, trust_report : TrustReport, output_dir : str, all_dts=False, additional_info="") -> None:
         self.trust_report = trust_report
         self.output_dir = output_dir
         self.all_dts = all_dts
         self.report_dict = {}
+        self.additional_info=additional_info
     
     def json(self):
         self.report_dict = {
@@ -30,7 +37,7 @@ class TrusteeFormatter:
         
         with open(self.output_dir + '/trust_report.json', 'w') as file:
             json.dump(self.report_dict, file)
-            
+    
     def report_summary(self):
         bb = {"model" : f"{type(self.trust_report.blackbox).__name__}",
             "dataset_size" : self.trust_report.dataset_size, 
@@ -69,82 +76,78 @@ class TrusteeFormatter:
             "min_tree" : min_tree
         }
     
+    
+
     def single_run_analysis(self):
+
+        def calc_percentage(part, total):
+            return (part / total) * 100 if total else 0
+
         def top_features():
-            sum_nodes = 0
-            sum_nodes_perc = 0
-            sum_data_split = 0
             top_feature_vals = {}
-            for (feat,vals) in self.trust_report.max_dt_top_features:
-                node, node_perc, data_split = (
-                    vals["count"],
-                    (vals["count"] / (self.trust_report.max_dt.tree_.node_count - self.trust_report.max_dt.tree_.n_leaves)) * 100,
-                    (vals["samples"] / self.trust_report.trustee.get_samples_sum()) * 100,
-                )
-                sum_nodes += node
-                sum_nodes_perc += node_perc
-                sum_data_split += data_split
-                top_feature_vals[self.trust_report.feature_names[feat]] = {
-                    "num_nodes(%)" : f"{node} ({node_perc:.2f}%)",
-                    "data_split(%)" : f"{vals['samples']} ({data_split:.2f}%)"
+            for (feat, vals) in self.trust_report.max_dt_top_features:
+                node_count = self.trust_report.max_dt.tree_.node_count
+                n_leaves = self.trust_report.max_dt.tree_.n_leaves
+                samples_sum = self.trust_report.trustee.get_samples_sum()
+
+                node_perc = calc_percentage(vals["count"], node_count - n_leaves)
+                data_split_perc = calc_percentage(vals["samples"], samples_sum)
+
+                feature_name = self.trust_report.feature_names.get(feat, feat)
+                top_feature_vals[feature_name] = {
+                    "num_nodes(%)" : f"{vals['count']} ({node_perc:.2f}%)",
+                    "data_split(%)" : f"{vals['samples']} ({data_split_perc:.2f}%)"
                 }
             return top_feature_vals
-           
+
         def top_nodes():
             top_node_vals = {}
             for node in self.trust_report.max_dt_top_nodes:
+                feature_name = self.trust_report.feature_names.get(node['feature'], node['feature'])
+                threshold = node['threshold']
+                node_key = f"{feature_name} <= {threshold}"
+
+                samples_left_perc = calc_percentage(node["data_split"][0], self.trust_report.max_dt.tree_.n_node_samples[0])
+                samples_right_perc = calc_percentage(node["data_split"][1], self.trust_report.max_dt.tree_.n_node_samples[0])
+
                 samples_by_class = [
                     (
-                        self.trust_report.class_names[idx] if self.trust_report.class_names is not None and idx < len(self.trust_report.class_names) else idx,
-                        (count_left / self.trust_report.max_dt.tree_.value[0][0][idx]) * 100,
-                        (count_right / self.trust_report.max_dt.tree_.value[0][0][idx]) * 100,
+                        self.trust_report.class_names.get(idx, idx),
+                        calc_percentage(count_left, self.trust_report.max_dt.tree_.value[0][0][idx]),
+                        calc_percentage(count_right, self.trust_report.max_dt.tree_.value[0][0][idx]),
                     )
                     for idx, (count_left, count_right) in enumerate(node["data_split_by_class"])
                 ]
-                samples_left = (node["data_split"][0] / self.trust_report.max_dt.tree_.n_node_samples[0]) * 100
-                samples_right = (node["data_split"][1] / self.trust_report.max_dt.tree_.n_node_samples[0]) * 100
-                top_node_vals[f"{self.trust_report.feature_names[node['feature']] if self.trust_report.feature_names else node['feature']} <= {node['threshold']}"] = {
-                    "gini_split" : f"Left: {node['gini_split'][0]:.2f} \nRight: {node['gini_split'][1]:.2f}",
-                    "data_split" : f"Left: {samples_left:.2f}% \nRight: {samples_right:.2f}%",
-                    "data_split_by_class(L/R)" : "\n".join(f"{row[0]}: {row[1]:.2f}% / {row[2]:.2f}%" for row in samples_by_class)
+
+                top_node_vals[node_key] = {
+                    "gini_split": f"Left: {node['gini_split'][0]:.2f} \nRight: {node['gini_split'][1]:.2f}",
+                    "data_split": f"Left: {samples_left_perc:.2f}% \nRight: {samples_right_perc:.2f}%",
+                    "data_split_by_class(L/R)": "\n".join(f"{cls}: {left_perc:.2f}% / {right_perc:.2f}%" for cls, left_perc, right_perc in samples_by_class)
                 }
             return top_node_vals
-                
+
         def top_branches():
             top_branch_vals = {}
-            sum_samples = 0
-            sum_samples_perc = 0
-            sum_class_samples_perc = {}
             for branch in self.trust_report.max_dt_top_branches:
-                samples, samples_perc, class_samples_perc = (
-                    branch["samples"],
-                    (branch["samples"] / self.trust_report.max_dt.tree_.n_node_samples[0]) * 100,
-                    (branch["samples"] / self.trust_report.max_dt.tree_.value[0][0][branch["class"]]) * 100 if self.trust_report.is_classify else 0,
-                )
-                sum_samples += samples
-                sum_samples_perc += samples_perc
-                if branch["class"] not in sum_class_samples_perc:
-                    sum_class_samples_perc[branch["class"]] = 0
-                sum_class_samples_perc[branch["class"]] += class_samples_perc
-                branch_class = (
-                    self.trust_report.class_names[branch["class"]]
-                    if self.trust_report.class_names is not None and branch["class"] < len(self.trust_report.class_names)
-                    else branch["class"],
-                )
-                
-                rule = ', '.join([f"{self.trust_report.feature_names[feat] if self.trust_report.feature_names else feat} {op} {threshold}" for (_, feat, op, threshold) in branch["path"]])
+                samples_perc = calc_percentage(branch["samples"], self.trust_report.max_dt.tree_.n_node_samples[0])
+                class_samples_perc = calc_percentage(branch["samples"], self.trust_report.max_dt.tree_.value[0][0][branch["class"]]) if self.trust_report.is_classify else 0
+
+                branch_class = self.trust_report.class_names.get(branch["class"], branch["class"])
+                rule = ', '.join([f"{self.trust_report.feature_names.get(feat, feat)} {op} {threshold}" for _, feat, op, threshold in branch["path"]])
+
                 top_branch_vals[rule] = {
-                    "decision(P(x))" : f"{branch_class}\n({branch['prob']:.2f}%)",
-                    "sample(%)" : f"{samples}\n({samples_perc:.2f}%)",
-                    "class_samples" : f"{class_samples_perc:.2f}%"
+                    "decision(P(x))": f"{branch_class}\n({branch['prob']:.2f}%)",
+                    "sample(%)": f"{branch['samples']}\n({samples_perc:.2f}%)",
+                    "class_samples": f"{class_samples_perc:.2f}%"
                 }
             return top_branch_vals
-        
+
         return {
-            f"top_{len(self.trust_report.max_dt_top_features)}_features" : top_features(),
-            f"top_{len(self.trust_report.max_dt_top_nodes)}_nodes" : top_nodes(),
-            f"top_{len(self.trust_report.max_dt_top_branches)}_branches" : top_branches()
+            f"top_{len(self.trust_report.max_dt_top_features)}_features": top_features(),
+            f"top_{len(self.trust_report.max_dt_top_nodes)}_nodes": top_nodes(),
+            f"top_{len(self.trust_report.max_dt_top_branches)}_branches": top_branches()
         }
+
         
     def prunning_analysis(self):
         def top_k_iteration():
@@ -747,118 +750,68 @@ class TrusteeFormatter:
                     </tbody>
                 </table>
         
-        """
-        import dotenv 
-        dotenv.load_dotenv()
-        if "OPENAI_API_KEY" in os.environ:
-            openai.api_key = os.environ["OPENAI_API_KEY"]
-        else:
-            # Ask the user to input the API key if it's not found in the environment variables
-            openai.api_key = input("Enter your OpenAI API key: ")
-
-        
-        def chatGPTNodes():
-            data = ""
-            for val in trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_nodes)}_nodes"]:
-                data += f"""[{val}, {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_nodes)}_nodes"][val]['gini_split']},  {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_nodes)}_nodes"][val]['data_split']}, {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_nodes)}_nodes"][val]['data_split_by_class(L/R)']}]""".replace('Right', 'R').replace('Left', 'L')
-    
-            cnames = self.trust_report.class_names
-            
-            for i in cnames:
-                data = data.replace(i,str(cnames.index(i)))
-            
-            return data
-        
-        def chatGPTFeatures():
-            data = trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_features)}_features"]
-            data = str(data)
-            return data
-        
-        def chatGPTBranches():
-            data = ""
-            data = str(data)
-            
-            for val in trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_branches)}_branches"]:
-                data += f"""[{val}, {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_branches)}_branches"][val]["decision(P(x))"]}, {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_branches)}_branches"][val]["sample(%)"]}, {trust_report_json["single_run_analysis"][f"top_{len(self.trust_report.max_dt_top_branches)}_branches"][val]["class_samples"]}]"""
-
-            return data
+        """        
         
         def chatGPTSummary():
             try:
-                    # Extracting data from the trust report JSON file
-                blackboxModelDetails = str(trust_report_json["summary"]["black_box"])
-                maxTreeDetails = str(trust_report_json["summary"]["max_tree"])
-                
-                # Reading data from report files
+         
+               
                 with open(self.output_dir + "reports/trust_report_dt", "r") as f:
                     maxTreeData = f.read()
                             
                 with open(self.output_dir +"reports/trust_report_pruned_dt", "r") as f:
                     prunedTreeData = f.read()
                 
-                # Collecting additional data for analysis
-                topKNodes = str(chatGPTNodes())
-                topKFeatures = str(chatGPTFeatures())
-                topKBranches = str(chatGPTBranches())
-                repeatedRunAnalysis = str(chatGPTRRA())
-                
+
+                trustee_description = """
+                TRUSTEE (Transparent, Reproducible, and Unbiased Systematic Evaluation Environment) is a model-agnostic interpretability framework that promotes transparency, explainability, and reproducibility in evaluating black-box machine learning models. It applies across a broad range of domains, extending well beyond network data analysis.
+                Key capabilities and features of TRUSTEE include:
+                - Universal Applicability: TRUSTEE is designed to work with any machine learning model, regardless of architecture, enabling a wide range of applications from image recognition to natural language processing.
+                - Comprehensive Decision Tree Analysis: TRUSTEE generates insightful decision trees that offer a global view of a model's decision patterns, enhancing the understanding of its logic and potentially revealing systemic biases or critical dependencies.
+                - Trustworthy Reports: The framework compiles detailed trust reports that encapsulate crucial aspects like feature significance and model rules, aiding stakeholders in evaluating the validity and fairness of the model's decisions.
+                - Pruning for Understandability: TRUSTEE implements an intelligent pruning algorithm that condenses decision trees to their most informative elements, striking a balance between simplicity and accuracy to highlight key features without overwhelming users.
+                - Stability Assurance: Through iterative refinements and comparisons, TRUSTEE ensures that interpretations are not artifacts of the dataset or methodology, giving users confidence in the consistency and reliability of the explanations.
+                """
+
+                # Define a specific use case for TRUSTEE evaluation: a machine learning model's outcomes in JSON format needing detailed examination.
+                # Aim for a comprehensive analysis across multiple dimensions including feature impacts, model limitations, architectural suggestions, validation strategies, and general improvements.
+
                 response = openai.ChatCompletion.create(
-    model="gpt-4-1106-preview",
-    messages=[
-        {
-            "role": "system",
-            "content": (
-                """
-                As an AI assistant, your task is to analyze the outputs of TRUSTEE, a tool for enhancing the interpretability of complex black-box machine learning models. You'll assist in understanding the decision-making processes of these models and offer guidance for improvements based on TRUSTEE's findings. TRUSTEE is model-agnostic, provides global interpretability, extracts decision trees for easier understanding, ensures high fidelity and stability, and may produce a trust report to assess model trustworthiness. Focus on domains where decision-making transparency is crucial.
-                """
-            )
-        },
-        {
-            "role": "user",
-            "content": f"""
-            Here is the data for analysis:
-            - Blackbox Model Details: {blackboxModelDetails}
-            - Max Tree Details: {maxTreeDetails}
-            - Max Tree Data: {maxTreeData}
-            - Pruned Tree Data: {prunedTreeData}
-            - Top K Nodes: {topKNodes}
-            - Top K Features: {topKFeatures}
-            - Top K Branches: {topKBranches}
-            - Repeated Run Analysis: {repeatedRunAnalysis}
-            - Here are the class names respectively: {self.trust_report.class_names}
+                    model="gpt-4-1106-preview",
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": trustee_description
+                        },
+                        {
+                            "role": "user",
+                            "content": f"""
+                            For the detailed evaluation of a machine learning model's outcomes using TRUSTEE, I am submitting the following key documents:
 
-            Please focus on the following areas for detailed analysis and recommendations:
-            - Specific features influencing model decisions and alternative feature engineering strategies.
-            - Contextual application of the model in the specific domain (healthcare, finance, etc.).
-            - Alternative modeling techniques and architectures addressing the identified issues.
-            - Recommendations on model validation strategies to ensure robustness.
-            - Data quality, cleaning, preprocessing, and augmentation strategies.
-            - Detailed exploration of hyperparameter optimization.
-            - Approaches to detect and mitigate potential biases in the model.
-            - Implementation of local interpretability tools to complement global interpretations.
-            - Suggestions on performance metrics beyond the F1 score.
-            - Practical steps for implementing the suggested model improvements.
-            """
-        },
-    ]
-)
+                            - Trust Report (JSON format): {trust_report_json}
+                            - High-fidelity Decision Tree Data: {maxTreeData}
+                            - Interpretable Pruned Decision Tree Data: {prunedTreeData}
+                            - Class Labels: {self.trust_report.class_names}
+                            - Additional Information: {self.additional_info}
 
-    
+                            Address these specific areas for an in-depth analysis and provide actionable recommendations:
+
+                            1. Feature Impact Analysis: Examine the influence of individual features on the model's decisions.
+                            2. Model Limitations Critique: Identify weaknesses of the model and suggest paths for enhancement.
+                            3. Architectural Improvements: Propose design optimizations based on the model’s decision-making patterns.
+                            4. Robust Validation Techniques: Construct strategies for thorough model testing under various scenarios.
+                            5. Performance Metrics Examination: Scrutinize the model using set metrics and propose additional metrics if needed for a holistic evaluation.
+                            6. General Performance & Trust Enhancements: Recommend tailored steps to improve model performance and ensure its trustworthiness.
+
+                            Produce a response in clear, detailed Markdown format. Avoid extraneous content outside of the targeted analysis and recommendations. Specify any limitations to the analysis and clearly justify any sections that cannot be addressed.
+                            """
+                        },
+                    ]
+                )   
                 return markdown.markdown(response['choices'][0]['message']['content'])
             except Exception as e:
                 print(e)
                 return "Chat GPT Summary failed"
-        
-        def chatGPTRRA():
-            data = ""
-            for val in trust_report_json["repeated_run_analysis"]['iterative_feature_removal']:
-                data += f"""{trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]["feature_removed"]}, {trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]['n_features_removed']}, black box performance : {trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]['performance_score']["accuracy"]}, {trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]['dt_size']}, explanation fidelity : {trust_report_json["repeated_run_analysis"]['iterative_feature_removal'][val]['fidelity_score']["accuracy"]}"""
-           
-          
-            
-            return data
-        
-
         
         try:
             with concurrent.futures.ThreadPoolExecutor() as executor:
