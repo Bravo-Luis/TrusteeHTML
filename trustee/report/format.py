@@ -93,7 +93,7 @@ class TrusteeFormatter:
                 node_perc = calc_percentage(vals["count"], node_count - n_leaves)
                 data_split_perc = calc_percentage(vals["samples"], samples_sum)
 
-                feature_name = self.trust_report.feature_names.get(feat, feat)
+                feature_name = self.trust_report.feature_names[feat] if feat < len(self.trust_report.feature_names) else feat
                 top_feature_vals[feature_name] = {
                     "num_nodes(%)" : f"{vals['count']} ({node_perc:.2f}%)",
                     "data_split(%)" : f"{vals['samples']} ({data_split_perc:.2f}%)"
@@ -103,7 +103,8 @@ class TrusteeFormatter:
         def top_nodes():
             top_node_vals = {}
             for node in self.trust_report.max_dt_top_nodes:
-                feature_name = self.trust_report.feature_names.get(node['feature'], node['feature'])
+                feature_index = node['feature']
+                feature_name = self.trust_report.feature_names[feature_index] if feature_index < len(self.trust_report.feature_names) else feature_index
                 threshold = node['threshold']
                 node_key = f"{feature_name} <= {threshold}"
 
@@ -112,7 +113,7 @@ class TrusteeFormatter:
 
                 samples_by_class = [
                     (
-                        self.trust_report.class_names.get(idx, idx),
+                        self.trust_report.class_names[idx] if idx < len(self.trust_report.class_names) else idx,
                         calc_percentage(count_left, self.trust_report.max_dt.tree_.value[0][0][idx]),
                         calc_percentage(count_right, self.trust_report.max_dt.tree_.value[0][0][idx]),
                     )
@@ -132,8 +133,12 @@ class TrusteeFormatter:
                 samples_perc = calc_percentage(branch["samples"], self.trust_report.max_dt.tree_.n_node_samples[0])
                 class_samples_perc = calc_percentage(branch["samples"], self.trust_report.max_dt.tree_.value[0][0][branch["class"]]) if self.trust_report.is_classify else 0
 
-                branch_class = self.trust_report.class_names.get(branch["class"], branch["class"])
-                rule = ', '.join([f"{self.trust_report.feature_names.get(feat, feat)} {op} {threshold}" for _, feat, op, threshold in branch["path"]])
+                branch_class_idx = branch["class"]
+                branch_class = self.trust_report.class_names[branch_class_idx] if branch_class_idx < len(self.trust_report.class_names) else branch_class_idx
+                rule = ', '.join([
+                    f"{self.trust_report.feature_names[feat] if feat < len(self.trust_report.feature_names) else feat} {op} {threshold}"
+                    for _, feat, op, threshold in branch["path"]
+                ])
 
                 top_branch_vals[rule] = {
                     "decision(P(x))": f"{branch_class}\n({branch['prob']:.2f}%)",
@@ -141,6 +146,7 @@ class TrusteeFormatter:
                     "class_samples": f"{class_samples_perc:.2f}%"
                 }
             return top_branch_vals
+
 
         return {
             f"top_{len(self.trust_report.max_dt_top_features)}_features": top_features(),
@@ -772,9 +778,8 @@ class TrusteeFormatter:
                 - Pruning for Understandability: TRUSTEE implements an intelligent pruning algorithm that condenses decision trees to their most informative elements, striking a balance between simplicity and accuracy to highlight key features without overwhelming users.
                 - Stability Assurance: Through iterative refinements and comparisons, TRUSTEE ensures that interpretations are not artifacts of the dataset or methodology, giving users confidence in the consistency and reliability of the explanations.
                 """
-
-                # Define a specific use case for TRUSTEE evaluation: a machine learning model's outcomes in JSON format needing detailed examination.
-                # Aim for a comprehensive analysis across multiple dimensions including feature impacts, model limitations, architectural suggestions, validation strategies, and general improvements.
+                
+                print(trust_report_json)
 
                 response = openai.ChatCompletion.create(
                     model="gpt-4-1106-preview",
