@@ -9,7 +9,7 @@ import pickle
 import os
 from trustee.report.format import TrusteeFormatter
 
-# Pickled Trust Report
+# Trust Report (Doesn't need to be pickled)
 with open('report.pickle', 'rb') as f:
     report = pickle.load(f)
     
